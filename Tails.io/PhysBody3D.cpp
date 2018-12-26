@@ -45,3 +45,13 @@ void PhysBody3D::SetPos(float x, float y, float z)
 	t.setOrigin(btVector3(x, y, z));
 	body->setWorldTransform(t);
 }
+
+vec3 PhysBody3D::GetPos()
+{
+	btVector3 vector = body->getWorldTransform().getOrigin();
+	vec3 vec;
+	vec.Set(vector.getX(), vector.getY(), vector.getZ());
+	return vec ;
+}
+
+
