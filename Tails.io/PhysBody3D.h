@@ -15,6 +15,7 @@ public:
 	PhysBody3D(btRigidBody* body);
 	~PhysBody3D();
 
+	btRigidBody* GetBody();
 	void Push(float x, float y, float z);
 	void GetTransform(float* matrix) const;
 	void SetTransform(const float* matrix) const;
