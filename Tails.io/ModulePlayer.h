@@ -5,6 +5,13 @@
 
 struct PhysVehicle3D;
 
+struct TailBall 
+{
+	Sphere sphere;
+	PhysBody3D* physBody;
+};
+
+
 #define MAX_ACCELERATION 1000.0f
 #define TURN_DEGREES 15.0f * DEGTORAD
 #define BRAKE_POWER 100.0F
@@ -22,6 +29,8 @@ public:
 public:
 
 	PhysVehicle3D* vehicle;
+	p2List<TailBall> tail;
+
 	float turn;
 	float acceleration;
 	float brake;

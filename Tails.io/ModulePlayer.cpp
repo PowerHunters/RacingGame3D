@@ -25,12 +25,11 @@ bool ModulePlayer::Start()
 	car.chassis_offset.Set(0, 1, 0);
 	car.mass = 300.0f;
 	car.suspensionStiffness = 80.0F;
-	car.suspensionCompression = 0.83f;
+	car.suspensionCompression = 0.2f;
 	car.suspensionDamping = 2.5F;
-	car.maxSuspensionTravelCm = 300.0F;
+	car.maxSuspensionTravelCm = 500.0f;
 	car.frictionSlip = 1000.0f;
-	car.maxSuspensionForce = 6000.0f;
-
+	car.maxSuspensionForce = 4000.0f;
 	// Wheel properties ---------------------------------------
 	float connection_height = 0.9f;
 	float front_wheel_radius = 0.4f;
@@ -99,8 +98,33 @@ bool ModulePlayer::Start()
 	car.wheels[3].steering = false;
 
 	vehicle = App->physics->AddVehicle(car);
-	vehicle->SetPos(0, 2, 10);
+	vehicle->SetPos(0, 1, 10);
 	
+	// Tail ------------------------------
+
+	int tailBalls = 5;
+	float size2 = 0.8f;
+
+	for (int i = 0; i < tailBalls; ++i)
+	{
+		TailBall tailBall;
+		tailBall.sphere.radius = size2;
+		tailBall.sphere.color = Red;
+		tailBall.sphere.SetPos(vehicle->GetPos().x, 0.8f, vehicle ->GetPos().z- 2 - 2 * i);
+		tailBall.physBody = App->physics->AddBody(tailBall.sphere, 40.0F);
+		tailBall.physBody->GetBody()->setRollingFriction(5000);
+		tailBall.physBody->GetBody()->setFriction(1);
+	    tail.add(tailBall);
+
+		if (i > 0) {
+			App->physics->AddConstraintP2P( *tail.Index(i).physBody, *tail.Index(i -1).physBody, vec3(0, 0, 1), vec3(0, 0, -1)/*, vec3(0, 1, 0), vec3(0, 1, 0)*/);
+		}
+		else
+		{
+			App->physics->AddConstraintP2P(*(PhysBody3D*)vehicle, *tail.Index(i).physBody, vec3(0, 0.8, -2), vec3(0 , 0, 2)/*, vec3(0, 1, 0), vec3(0, 1, 0)*/);
+		}
+	}
+
 	return true;
 }
 
@@ -108,7 +132,6 @@ bool ModulePlayer::Start()
 bool ModulePlayer::CleanUp()
 {
 	LOG("Unloading player");
-
 	return true;
 }
 
@@ -151,9 +174,11 @@ update_status ModulePlayer::Update(float dt)
 	App->camera->LookAt(vehicle->GetPos());
 	vehicle->Render();
 
-	char title[80];
-	sprintf_s(title, "%.1f Km/h", vehicle->GetKmh());
-	App->window->SetTitle(title);
+	for (p2List_item<TailBall>* item = tail.getFirst(); item; item = item->next)
+	{
+		item->data.physBody->GetTransform(&(item->data.sphere.transform));
+		item->data.sphere.Render();
+	}
 
 	return UPDATE_CONTINUE;
 }
