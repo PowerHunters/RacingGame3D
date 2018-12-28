@@ -40,6 +40,8 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	bool Draw();
+
 private:
 
 	void AddModule(Module* mod);

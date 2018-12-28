@@ -5,7 +5,7 @@
 #include "PhysVehicle3D.h"
 #include "PhysBody3D.h"
 
-ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL)
+ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), playerCar(NULL)
 {
 	turn = acceleration = brake = 0.0f;
 }
@@ -97,33 +97,13 @@ bool ModulePlayer::Start()
 	car.wheels[3].brake = true;
 	car.wheels[3].steering = false;
 
-	vehicle = App->physics->AddVehicle(car);
-	vehicle->SetPos(0, 1, 10);
+	playerCar = App->physics->AddVehicle(car);
+	playerCar->SetPos(0, 1, 10);
 	
-	// Tail ------------------------------
-
-	int tailBalls = 5;
-	float size2 = 0.8f;
-
-	for (int i = 0; i < tailBalls; ++i)
-	{
-		TailBall tailBall;
-		tailBall.sphere.radius = size2;
-		tailBall.sphere.color = Red;
-		tailBall.sphere.SetPos(vehicle->GetPos().x, 0.8f, vehicle ->GetPos().z- 2 - 2 * i);
-		tailBall.physBody = App->physics->AddBody(tailBall.sphere, 40.0F);
-		tailBall.physBody->GetBody()->setRollingFriction(5000);
-		tailBall.physBody->GetBody()->setFriction(1);
-	    tail.add(tailBall);
-
-		if (i > 0) {
-			App->physics->AddConstraintP2P( *tail.Index(i).physBody, *tail.Index(i -1).physBody, vec3(0, 0, 1), vec3(0, 0, -1)/*, vec3(0, 1, 0), vec3(0, 1, 0)*/);
-		}
-		else
-		{
-			App->physics->AddConstraintP2P(*(PhysBody3D*)vehicle, *tail.Index(i).physBody, vec3(0, 0.8, -2), vec3(0 , 0, 2)/*, vec3(0, 1, 0), vec3(0, 1, 0)*/);
-		}
-	}
+	// Test tail ---------------------------
+	
+	PhysBody3D * tailBall = nullptr;
+	PhysBody3D * iterator = nullptr;
 
 	return true;
 }
@@ -168,20 +148,17 @@ update_status ModulePlayer::Update(float dt)
 		brake = BRAKE_POWER;
 	}
 
-	vehicle->ApplyEngineForce(acceleration);
-	vehicle->Turn(turn);
-	vehicle->Brake(brake);
-	App->camera->LookAt(vehicle->GetPos());
-	vehicle->Render();
-
-	for (p2List_item<TailBall>* item = tail.getFirst(); item; item = item->next)
-	{
-		item->data.physBody->GetTransform(&(item->data.sphere.transform));
-		item->data.sphere.Render();
-	}
+	playerCar->ApplyEngineForce(acceleration);
+	playerCar->Turn(turn);
+	playerCar->Brake(brake);
 
 	return UPDATE_CONTINUE;
 }
 
+bool ModulePlayer::Draw()
+{
+	playerCar->Render();
+	return true;
+}
 
 

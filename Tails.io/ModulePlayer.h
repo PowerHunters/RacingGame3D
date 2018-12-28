@@ -25,11 +25,11 @@ public:
 	bool Start();
 	update_status Update(float dt);
 	bool CleanUp();
+	bool Draw();
 
-public:
+private:
 
-	PhysVehicle3D* vehicle;
-	p2List<TailBall> tail;
+	PhysVehicle3D* playerCar;
 
 	float turn;
 	float acceleration;

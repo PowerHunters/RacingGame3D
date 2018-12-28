@@ -2,8 +2,13 @@
 #include "Application.h"
 #include "PhysBody3D.h"
 #include "ModuleCamera3D.h"
+#include "ModulePlayer.h"
+#include "SDL\include\SDL_opengl.h"
+#include <gl/GL.h>
+#include <gl/GLU.h>
 
-ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
+
+ModuleCamera3D::ModuleCamera3D(Application* app, uint cameraNum , ModulePlayer* playerToFollow, bool start_enabled) : Module(app, start_enabled)
 {
 	CalculateViewMatrix();
 
@@ -13,6 +18,25 @@ ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(ap
 
 	Position = vec3(0.0f, 0.0f, 5.0f);
 	Reference = vec3(0.0f, 0.0f, 0.0f);
+
+	this->playerToFollow = playerToFollow;
+	this->cameraNum = cameraNum;
+
+	switch (this->cameraNum) {
+
+	case 1:
+		viewport.x = - (float)SCREEN_WIDTH * 0.25f ;
+		viewport.y = 0.0f;
+		viewport.w = SCREEN_WIDTH ;
+		viewport.h = SCREEN_HEIGHT;
+		break;
+	case 2: 
+		viewport.x = SCREEN_WIDTH;
+		viewport.y = 0.0f;
+		viewport.w = SCREEN_WIDTH * 0.5f;
+		viewport.h = SCREEN_HEIGHT;
+		break;
+	}
 }
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -38,30 +62,78 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
-	// Implement a debug camera with keys and mouse
-	// Now we can make this movememnt frame rate independant!
+	if (debug == true)
+	{
+		CameraDebug(dt);
+	}
+	else
+	{
+		CameraFollowPlayer();
+	}
 
-	vec3 newPos(0,0,0);
+
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleCamera3D::PostUpdate(float dt)
+{
+	// Draw all elements on camera viewport ------------------------
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(GetViewMatrix());
+	glViewport(viewport.x, viewport.y, viewport.w, viewport.h);
+	glEnable(GL_SCISSOR_TEST);
+	glScissor(0,0, (float) SCREEN_WIDTH * 0.5F , (float)SCREEN_HEIGHT);
+
+	App->Draw();
+
+	return UPDATE_CONTINUE;
+}
+
+bool ModuleCamera3D:: CameraFollowPlayer()
+{
+	//btVector3 offset;
+	//btQuaternion q = vehicle->vehicle->getChassisWorldTransform().getRotation();
+	//mat4x4 t;
+
+	//vehicle->vehicle->getChassisWorldTransform().getOpenGLMatrix(&t);
+	//offset.setValue(0, 3.5f, -6.0f);
+	//offset = offset.rotate(q.getAxis(), q.getAngle());
+
+	//vec3 camera_pos = vehicle->GetPos() + vec3(offset.getX(), offset.getY(), offset.getZ());
+
+	//App->camera->Position = camera_pos;
+	//App->camera->LookAt(vehicle->GetPos());
+
+	return true;
+}
+
+
+bool ModuleCamera3D::CameraDebug (float dt)
+{
+	// Implement a debug camera with keys and mouse
+// Now we can make this movememnt frame rate independant!
+
+	vec3 newPos(0, 0, 0);
 	float speed = 3.0f * dt;
-	if(App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 		speed = 8.0f * dt;
 
-	if(App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) newPos.y += speed;
-	if(App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) newPos.y -= speed;
+	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) newPos.y += speed;
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) newPos.y -= speed;
 
-	if(App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
-	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
 
 
-	if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
-	if(App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
 
 	Position += newPos;
 	Reference += newPos;
 
 	// Mouse motion ----------------
 
-	if(App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
+	if (App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
 	{
 		int dx = -App->input->GetMouseXMotion();
 		int dy = -App->input->GetMouseYMotion();
@@ -70,7 +142,7 @@ update_status ModuleCamera3D::Update(float dt)
 
 		Position -= Reference;
 
-		if(dx != 0)
+		if (dx != 0)
 		{
 			float DeltaX = (float)dx * Sensitivity;
 
@@ -79,14 +151,14 @@ update_status ModuleCamera3D::Update(float dt)
 			Z = rotate(Z, DeltaX, vec3(0.0f, 1.0f, 0.0f));
 		}
 
-		if(dy != 0)
+		if (dy != 0)
 		{
 			float DeltaY = (float)dy * Sensitivity;
 
 			Y = rotate(Y, DeltaY, X);
 			Z = rotate(Z, DeltaY, X);
 
-			if(Y.y < 0.0f)
+			if (Y.y < 0.0f)
 			{
 				Z = vec3(0.0f, Z.y > 0.0f ? 1.0f : -1.0f, 0.0f);
 				Y = cross(Z, X);
@@ -99,8 +171,9 @@ update_status ModuleCamera3D::Update(float dt)
 	// Recalculate matrix -------------
 	CalculateViewMatrix();
 
-	return UPDATE_CONTINUE;
+	return true;
 }
+
 
 // -----------------------------------------------------------------
 void ModuleCamera3D::Look(const vec3 &Position, const vec3 &Reference, bool RotateAroundReference)

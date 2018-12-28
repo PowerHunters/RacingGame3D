@@ -17,6 +17,7 @@ public:
 	update_status PostUpdate(float dt);
 	bool CleanUp();
 
+	bool Draw() override;
 	void OnResize(int width, int height);
 
 public:
