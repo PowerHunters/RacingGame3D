@@ -4,8 +4,10 @@
 #include "p2List.h"
 
 class btRigidBody;
+
 class Module;
 class vec3;
+class Primitive;
 
 // =================================================
 struct PhysBody3D
@@ -27,6 +29,7 @@ private:
 	btRigidBody* body = nullptr;
 	bool is_sensor = false;
 public:
+	Primitive* primitive = nullptr;
 	p2List<Module*> collision_listeners;
 };
 

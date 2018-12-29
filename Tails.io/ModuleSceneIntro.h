@@ -26,6 +26,7 @@ public:
 
 
 private:
-	
+
+	p2List<PhysBody3D*> stagePrimitives;
 
 };

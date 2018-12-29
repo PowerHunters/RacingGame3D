@@ -218,8 +218,9 @@ PhysBody3D* ModulePhysics3D::AddBody(const Sphere& sphere, float mass)
 
 	btRigidBody* body = new btRigidBody(rbInfo);
 	PhysBody3D* pbody = new PhysBody3D(body);
+	Primitive* new_primitive = new Sphere(sphere);
 
-
+	pbody->primitive = new_primitive;
 	body->setUserPointer(pbody);
 	world->addRigidBody(body);
 	bodies.add(pbody);
@@ -247,7 +248,9 @@ PhysBody3D* ModulePhysics3D::AddBody(const Cube& cube, float mass)
 
 	btRigidBody* body = new btRigidBody(rbInfo);
 	PhysBody3D* pbody = new PhysBody3D(body);
+	Primitive* new_primitive = new Cube(cube);
 
+	pbody->primitive = new_primitive;
 	body->setUserPointer(pbody);
 	world->addRigidBody(body);
 	bodies.add(pbody);
@@ -274,7 +277,9 @@ PhysBody3D* ModulePhysics3D::AddBody(const Cylinder& cylinder, float mass)
 
 	btRigidBody* body = new btRigidBody(rbInfo);
 	PhysBody3D* pbody = new PhysBody3D(body);
+	Primitive* new_primitive = new Cylinder(cylinder);
 
+	pbody->primitive = new_primitive;
 	body->setUserPointer(pbody);
 	world->addRigidBody(body);
 	bodies.add(pbody);
