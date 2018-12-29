@@ -41,6 +41,7 @@ public:
 	bool CleanUp();
 	bool Draw();
 
+	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 	void AddMissile();
 	PhysVehicle3D* GetPlayerCar();
 

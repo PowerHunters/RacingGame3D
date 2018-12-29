@@ -186,6 +186,20 @@ update_status ModulePlayer::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
+void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
+{
+	if (App->scene_intro->test == body2)
+	{
+		for (p2List_item<Missile*> * item = missiles.getFirst(); item; item = item->next)
+		{
+			if (item->data->physBody == body1)
+			{
+				LOG("DAMN");
+			}
+		}
+	}
+}
+
 void ModulePlayer::AddMissile()
 {
 	Missile* missile = new Missile(this);

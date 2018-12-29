@@ -7,6 +7,7 @@
 #define MAX_SNAKE 2
 
 struct PhysBody3D;
+struct PhysVehicle3D;
 struct PhysMotor3D;
 
 class ModuleSceneIntro : public Module
