@@ -4,6 +4,7 @@
 #include "glmath.h"
 
 class ModulePlayer;
+class PhysVehicle3D;
 
 class ModuleCamera3D : public Module
 {
@@ -31,12 +32,15 @@ private:
 public:
 	
 	vec3 X, Y, Z, Position, Reference;
-	bool debug = true;
+	bool debug = false;
 
 private:
 
 	mat4x4            ViewMatrix, ViewMatrixInverse;
 	ModulePlayer*     playerToFollow = nullptr;
 	uint              cameraNum = 1u;
-	SDL_Rect          viewport;
+	SDL_Rect          viewport = { 0,0,0,0 };
+	SDL_Rect          sissors = { 0,0,0,0 };
+
+
 };

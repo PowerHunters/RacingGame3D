@@ -27,9 +27,11 @@ public:
 	bool CleanUp();
 	bool Draw();
 
+	PhysVehicle3D* GetPlayerCar();
+
 private:
 
-	PhysVehicle3D* playerCar;
+	PhysVehicle3D* playerCar = nullptr;
 
 	float turn;
 	float acceleration;

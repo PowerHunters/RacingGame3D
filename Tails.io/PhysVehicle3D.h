@@ -54,5 +54,5 @@ public:
 public:
 
 	VehicleInfo info;
-	btRaycastVehicle* vehicle;
+	btRaycastVehicle* vehicle = nullptr;
 };
