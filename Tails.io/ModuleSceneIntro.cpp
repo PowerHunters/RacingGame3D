@@ -17,6 +17,11 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
+	Cube cube(4, 4, 6);
+	cube.SetPos(0, 2, 0);
+
+	test = App->physics->AddBody(cube, 600);
+
 	return ret;
 }
 
@@ -37,6 +42,7 @@ update_status ModuleSceneIntro::Update(float dt)
 
 void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 {
+
 }
 
 bool ModuleSceneIntro::Draw()

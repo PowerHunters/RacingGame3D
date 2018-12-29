@@ -21,8 +21,10 @@ public:
 
 	bool Draw();
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
+	PhysBody3D* test = nullptr;
 
-public:
 
+private:
+	
 
 };

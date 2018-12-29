@@ -5,6 +5,7 @@
 #include "PhysVehicle3D.h"
 #include "PhysBody3D.h"
 #include "Timer.h"
+#include "ModuleSceneIntro.h"
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), playerCar(NULL)
 {
@@ -119,7 +120,6 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update(float dt)
 {
-
 	// Update Car -------------------------------------------
 
 	turn = acceleration = brake = 0.0f;
@@ -214,10 +214,8 @@ Missile::Missile(ModulePlayer* owner)
 	offset = offset.rotate(q.getAxis(), q.getAngle());
 
 	// Set init position offset respect the car ---------------------
-
 	vec3 missileInitPos = owner->GetPlayerCar()->GetPos() + vec3(offset.getX(), offset.getY(), offset.getZ());
 	s.SetPos(missileInitPos.x, missileInitPos.y, missileInitPos.z);
-
 
 	// Use car Z vector as reference --------------------------------
 	float force = 60.0F;
@@ -228,6 +226,7 @@ Missile::Missile(ModulePlayer* owner)
 
 	// Create a missile ---------------------------------------------
 	physBody = owner->App->physics->AddBody(s);
+	physBody->collision_listeners.add(owner);
 	physBody->Push(Z.getX(), Z.getY(), Z.getZ());
 }
 
@@ -241,6 +240,16 @@ void Missile::Update()
 
 bool ModulePlayer::Draw()
 {
+	// Draw missiles ================================================
+	for (p2List_item<Missile*> * item = missiles.getFirst(); item; item = item->next)
+	{
+		vec3 vec = item->data->physBody->GetPos();
+		Sphere s(1);
+		s.SetPos(vec.x, vec.y, vec.z);
+		s.Render();
+	}
+	
+	// Draw car ====================================================
 	playerCar->Render();
 
 	// Rotation info -----------------------------

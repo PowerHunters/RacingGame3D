@@ -187,6 +187,7 @@ bool ModulePhysics3D::DeleteBody(PhysBody3D * body)
 	{
 		if (item->data == body)
 		{
+
 			world->removeRigidBody(item->data->body);
 			delete item->data;
 			bodies.del(item);
