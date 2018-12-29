@@ -148,6 +148,37 @@ update_status ModulePlayer::Update(float dt)
 		brake = BRAKE_POWER;
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+	{
+		Sphere s(1);
+		btVector3 offset;
+		btQuaternion q = playerCar->vehicle->getChassisWorldTransform().getRotation();
+
+		offset.setValue(0, 0.5f, 6);
+		LOG("  %f , %f , %f " , offset.getX() , offset.getY(), offset.getZ())
+		offset = offset.rotate(q.getAxis(), q.getAngle());
+		LOG("  %f , %f , %f ", offset.getX(), offset.getY(), offset.getZ())
+
+
+
+		// Set init position offset respect the car ---------------------
+
+	    vec3 missileInitPos = playerCar->GetPos() +  vec3(offset.getX() , offset.getY() , offset.getZ());
+		s.SetPos(missileInitPos.x, missileInitPos.y, missileInitPos.z);
+
+
+		// Use car Z vector as reference --------------------------------
+		float force = 60.0F;
+		btVector3 Z(0, 0, 1);
+
+		Z = Z.rotate(q.getAxis(), q.getAngle());
+		Z *= force;
+
+		// Create a missile ---------------------------------------------
+
+		App->physics->AddBody(s)->Push(Z.getX(), Z.getY(), Z.getZ());
+	}
+
 	playerCar->ApplyEngineForce(acceleration);
 	playerCar->Turn(turn);
 	playerCar->Brake(brake);

@@ -64,6 +64,9 @@ bool ModuleCamera3D::CleanUp()
 // -----------------------------------------------------------------
 update_status ModuleCamera3D::Update(float dt)
 {
+	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+		debug = !debug;
+
 	if (debug == true)
 	{
 		CameraDebug(dt);
