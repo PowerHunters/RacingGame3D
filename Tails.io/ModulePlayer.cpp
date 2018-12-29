@@ -4,6 +4,7 @@
 #include "Primitive.h"
 #include "PhysVehicle3D.h"
 #include "PhysBody3D.h"
+#include "Timer.h"
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), playerCar(NULL)
 {
@@ -118,6 +119,9 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update(float dt)
 {
+
+	// Update Car -------------------------------------------
+
 	turn = acceleration = brake = 0.0f;
 
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
@@ -150,40 +154,89 @@ update_status ModulePlayer::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
-		Sphere s(1);
-		btVector3 offset;
-		btQuaternion q = playerCar->vehicle->getChassisWorldTransform().getRotation();
-
-		offset.setValue(0, 0.5f, 6);
-		LOG("  %f , %f , %f " , offset.getX() , offset.getY(), offset.getZ())
-		offset = offset.rotate(q.getAxis(), q.getAngle());
-		LOG("  %f , %f , %f ", offset.getX(), offset.getY(), offset.getZ())
-
-
-
-		// Set init position offset respect the car ---------------------
-
-	    vec3 missileInitPos = playerCar->GetPos() +  vec3(offset.getX() , offset.getY() , offset.getZ());
-		s.SetPos(missileInitPos.x, missileInitPos.y, missileInitPos.z);
-
-
-		// Use car Z vector as reference --------------------------------
-		float force = 60.0F;
-		btVector3 Z(0, 0, 1);
-
-		Z = Z.rotate(q.getAxis(), q.getAngle());
-		Z *= force;
-
-		// Create a missile ---------------------------------------------
-
-		App->physics->AddBody(s)->Push(Z.getX(), Z.getY(), Z.getZ());
+		AddMissile();
 	}
 
 	playerCar->ApplyEngineForce(acceleration);
 	playerCar->Turn(turn);
 	playerCar->Brake(brake);
 
+	// Update Missiles  -------------------------------------------
+
+	p2List_item<Missile*> * item = missiles.getFirst() ;
+
+	while (item != nullptr)
+	{
+		item->data->Update();
+
+		if (item->data->toDelete == true)
+		{
+			p2List_item<Missile*> *iterator = item->next;
+			App->physics->DeleteBody(item->data->physBody);
+			delete item->data;
+			missiles.del(item);
+			item = iterator;
+		}
+		else
+		{
+			item = item->next;
+		}
+	}
+
 	return UPDATE_CONTINUE;
+}
+
+void ModulePlayer::AddMissile()
+{
+	Missile* missile = new Missile(this);
+	missiles.add(missile);
+}
+
+
+
+PhysVehicle3D * ModulePlayer::GetPlayerCar()
+{
+	return playerCar;
+}
+
+
+Missile::Missile(ModulePlayer* owner)
+{
+	this->owner = owner;
+
+	timerToDelete.Start();
+
+	Sphere s(1);
+	btVector3 offset;
+	btQuaternion q = owner->GetPlayerCar()->vehicle->getChassisWorldTransform().getRotation();
+
+	offset.setValue(0, 0.5f, 6);
+	offset = offset.rotate(q.getAxis(), q.getAngle());
+
+	// Set init position offset respect the car ---------------------
+
+	vec3 missileInitPos = owner->GetPlayerCar()->GetPos() + vec3(offset.getX(), offset.getY(), offset.getZ());
+	s.SetPos(missileInitPos.x, missileInitPos.y, missileInitPos.z);
+
+
+	// Use car Z vector as reference --------------------------------
+	float force = 60.0F;
+	btVector3 Z(0, 0, 1);
+
+	Z = Z.rotate(q.getAxis(), q.getAngle());
+	Z *= force;
+
+	// Create a missile ---------------------------------------------
+	physBody = owner->App->physics->AddBody(s);
+	physBody->Push(Z.getX(), Z.getY(), Z.getZ());
+}
+
+void Missile::Update()
+{
+	if (timerToDelete.Read() > TIME_TO_DELETE_MISSILE)
+	{
+		toDelete = true;
+	}
 }
 
 bool ModulePlayer::Draw()
@@ -303,10 +356,3 @@ bool ModulePlayer::Draw()
 
 	return true;
 }
-
-PhysVehicle3D * ModulePlayer::GetPlayerCar()
-{
-	return playerCar;
-}
-
-

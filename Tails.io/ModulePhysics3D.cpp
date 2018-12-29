@@ -161,8 +161,12 @@ bool ModulePhysics3D::CleanUp()
 
 	shapes.clear();
 
-	for(p2List_item<PhysBody3D*>* item = bodies.getFirst(); item; item = item->next)
+	for (p2List_item<PhysBody3D*>* item = bodies.getFirst(); item; item = item->next) 
+	{
+		world->removeRigidBody(item->data->body);
 		delete item->data;
+	}
+		
 
 	bodies.clear();
 
@@ -176,6 +180,23 @@ bool ModulePhysics3D::CleanUp()
 
 	return true;
 }
+
+bool ModulePhysics3D::DeleteBody(PhysBody3D * body)
+{
+	for (p2List_item<PhysBody3D*>* item = bodies.getFirst(); item; item = item->next)
+	{
+		if (item->data == body)
+		{
+			world->removeRigidBody(item->data->body);
+			delete item->data;
+			bodies.del(item);
+
+			return true;
+		}
+	}
+	return false;
+}
+
 
 // ---------------------------------------------------------
 PhysBody3D* ModulePhysics3D::AddBody(const Sphere& sphere, float mass)
@@ -318,6 +339,7 @@ PhysVehicle3D* ModulePhysics3D::AddVehicle(const VehicleInfo& info)
 
 	return pvehicle;
 }
+
 
 // ---------------------------------------------------------
 void ModulePhysics3D::AddConstraintP2P(PhysBody3D& bodyA, PhysBody3D& bodyB, const vec3& anchorA, const vec3& anchorB)

@@ -3,18 +3,32 @@
 #include "Globals.h"
 #include "p2Point.h"
 
-struct PhysVehicle3D;
-
-struct TailBall 
-{
-	Sphere sphere;
-	PhysBody3D* physBody;
-};
-
-
 #define MAX_ACCELERATION 1000.0f
 #define TURN_DEGREES 15.0f * DEGTORAD
 #define BRAKE_POWER 100.0F
+
+#define TIME_TO_DELETE_MISSILE 1000.0f
+
+struct PhysVehicle3D;
+class Timer;
+
+class Missile
+{
+public:
+	Missile(ModulePlayer* owner);
+	void Update();
+
+private:
+
+	bool toDelete = false;
+	PhysBody3D* physBody = nullptr;
+	ModulePlayer* owner = nullptr;
+	Timer timerToDelete;
+	
+	friend class ModulePlayer;
+};
+
+class Missile;
 
 class ModulePlayer : public Module
 {
@@ -27,11 +41,13 @@ public:
 	bool CleanUp();
 	bool Draw();
 
+	void AddMissile();
 	PhysVehicle3D* GetPlayerCar();
 
 private:
 
 	PhysVehicle3D* playerCar = nullptr;
+	p2List<Missile*> missiles;
 
 	float turn;
 	float acceleration;
