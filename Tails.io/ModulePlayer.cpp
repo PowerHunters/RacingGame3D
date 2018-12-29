@@ -268,7 +268,7 @@ bool ModulePlayer::Draw()
 
 	// Rotation info -----------------------------
 
-	btQuaternion q = playerCar->vehicle->getChassisWorldTransform().getRotation();
+	btQuaternion q = playerCar->GetBody()->getWorldTransform().getRotation();
 	mat4x4 t;
 	btVector3 offset;
 
