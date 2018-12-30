@@ -26,6 +26,10 @@ ModulePlayer::ModulePlayer(Application* app, uint playerNum, bool start_enabled)
 		break;
 	}
 
+	deadColor = { 255.f / 255.f,0, 0.0f , 0.5f };
+	winnerColor = Green;
+	loserColor = Red;
+
 
 }
 
@@ -130,6 +134,15 @@ bool ModulePlayer::Start()
 bool ModulePlayer::CleanUp()
 {
 	LOG("Unloading player");
+
+	for (p2List_item<Missile*> * item = missiles.getFirst(); item; item = item->next)
+	{
+		App->physics->DeleteBody(item->data->physBody);
+		delete item->data;
+	}
+
+	missiles.clear();
+
 	return true;
 }
 
@@ -140,7 +153,7 @@ update_status ModulePlayer::Update(float dt)
 
 	turn = acceleration = brake = 0.0f;
 
-	if (isDead == false)
+	if (state == PlayerState::alive)
 	{
 		if (playerNum == 1)
 		{
@@ -276,9 +289,9 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 	{
 		for (p2List_item<Missile*> * item = missiles.getFirst(); item; item = item->next)
 		{
-			if (item->data->physBody == body1 && playerToKill->isDead == false)
+			if (item->data->physBody == body1 && playerToKill->state == PlayerState::alive)
 			{
-				playerToKill->isDead = true;
+				playerToKill->state = PlayerState::dead;
 				App->scene_intro->StartAfterDeadTimer();
 				App->audio->PlayFx(explosion_fx);
 				item->data->toDelete = true;
@@ -302,7 +315,7 @@ void ModulePlayer::AddAmmo()
 void ModulePlayer::Reset()
 {
 	ammo = 0;
-	isDead = false;
+	state = PlayerState::alive;
 
 	playerCar->GetBody()->getWorldTransform().setIdentity();
 
@@ -321,6 +334,11 @@ void ModulePlayer::Reset()
 	playerCar->GetBody()->setAngularVelocity(btVector3(0, 0, 0));
 	playerCar->SetPos(initPosition.x, initPosition.y, initPosition.z);
 
+	for (p2List_item<Missile*> * item = missiles.getFirst(); item; item = item->next)
+	{
+		App->physics->DeleteBody(item->data->physBody);
+		delete item->data;
+	}
 }
 
 PhysVehicle3D * ModulePlayer::GetPlayerCar()
@@ -370,6 +388,30 @@ void Missile::Update()
 
 bool ModulePlayer::Draw()
 {
+	// Colors -----------------
+	Color color_1;
+	Color color_2;
+
+	switch (state)
+	{
+	case PlayerState::winner:
+		color_1 = winnerColor;
+		color_2 = winnerColor;
+		break;
+	case PlayerState::loser:
+		color_1 = loserColor;
+		color_2 = loserColor;
+		break;
+	case PlayerState::dead:
+		color_1 = deadColor;
+		color_2 = deadColor;
+		break;
+	case PlayerState::alive:
+		color_1 = firstColor;
+		color_2 = secondColor;
+		break;
+	}
+
 	// Draw missiles ================================================
 	for (p2List_item<Missile*> * item = missiles.getFirst(); item; item = item->next)
 	{
@@ -397,7 +439,7 @@ bool ModulePlayer::Draw()
 
 	// Main chasis -------------------------------
 	Cube chassis_1(1.5f, 0.6, 1);
-	chassis_1.color = firstColor;
+	chassis_1.color = color_1;
 	chassis_1.transform = t;
 
 	offset.setValue(0, 0.2f, -0.9f);
@@ -408,7 +450,7 @@ bool ModulePlayer::Draw()
 	chassis_1.transform.M[14] += offset.getZ();
 
 	Cube chassis_2(1.1f, 0.6, 1);
-	chassis_2.color = firstColor;
+	chassis_2.color = color_1;
 	chassis_2.transform = t;
 
 	offset.setValue(0, 0.2f, 0.0f);
@@ -420,7 +462,7 @@ bool ModulePlayer::Draw()
 
 	Cube chassis_3(0.8, 0.4, 1.3f);
 	chassis_3.transform = t;
-	chassis_3.color = firstColor;
+	chassis_3.color = color_1;
 
 	offset.setValue(0, 0.1f, 1.1f);
 	offset = offset.rotate(q.getAxis(), q.getAngle());
@@ -431,7 +473,7 @@ bool ModulePlayer::Draw()
 
 	// Front chasis ------------------------------
 	Cube front_chasis(2.3f, 0.15f, 0.5f);
-	front_chasis.color = secondColor;
+	front_chasis.color = color_2;
 	front_chasis.transform = t;
 
 	offset.setValue(0.0f, 0.1f, 2.0f);
@@ -443,7 +485,7 @@ bool ModulePlayer::Draw()
 
 	// Rear chasis ------------------------------
 	Cube rear_chasis(2.1f, 0.15f, 0.5f);
-	rear_chasis.color = secondColor;
+	rear_chasis.color = color_2;
 	rear_chasis.transform = t;
 
 	offset.setValue(0.0f, 0.8f, -1.5f);
@@ -456,6 +498,7 @@ bool ModulePlayer::Draw()
 	// Sticks  ---------------------------------
 	Cube rear_stick_1(0.1, 0.2, 0.1);
 	rear_stick_1.transform = t;
+	rear_stick_1.color = color_1;
 
 	offset.setValue(-0.3f, 0.6f, -1.3f);
 	offset = offset.rotate(q.getAxis(), q.getAngle());
@@ -467,6 +510,7 @@ bool ModulePlayer::Draw()
 
 	Cube rear_stick_2(0.1, 0.2, 0.1);
 	rear_stick_2.transform = t;
+	rear_stick_2.color = color_1;
 
 	offset.setValue(0.3f, 0.6f, -1.3f);
 	offset = offset.rotate(q.getAxis(), q.getAngle());
