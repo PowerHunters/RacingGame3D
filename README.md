@@ -4,7 +4,7 @@ FastTails.io v.1.0
 
 ## Description
 
-In this version of the game you will be able to fully play the game. The game is a 1vs1 driving arcade game where each player controls a car that shoots bullets. The player that has killed the most in a limited time wins. There are limited bullets, when you run out of them make sure to grab an sphere full of bullets.
+In this version of the game you will be able to fully play the game. The game is a 1vs1 driving arcade game where each player controls a car that shoots bullets. The player that survives wins. There are limited bullets, when you run out of them make sure to grab an sphere full of bullets.
 
 ## Links
 Lluis Moreu: https://github.com/youis11 
@@ -49,7 +49,7 @@ Github organization: https://github.com/PowerHunters
 
 ## Main goal
 
-- Beat the other player by killing him more times than he killed you in a limited time.
+- Beat the other player by killing him until he/she doesn't have more lifes.
 
 ## Instructions to execute
 
