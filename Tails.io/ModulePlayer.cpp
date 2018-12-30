@@ -189,7 +189,6 @@ update_status ModulePlayer::Update(float dt)
 				--ammo;
 				App->audio->PlayFx(shoot_fx);
 			}
-			
 		}
 	}
 
@@ -288,6 +287,8 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 			{
 				LOG("DAMN");
 				App->audio->PlayFx(explosion_fx);
+				item->data->toDelete = true;
+
 			}
 		}
 	}
