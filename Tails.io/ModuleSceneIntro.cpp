@@ -260,8 +260,18 @@ update_status ModuleSceneIntro::Update(float dt)
 	}
 
 	// Update title --------------------------------------------
-	char title[100];
-	sprintf_s(title, " FastTails.io ");
+	char title[200];
+
+	if (haveWinner == false)
+	{
+		sprintf_s(title, "(( PLAYER 1    Ammo : %i  Lifes : %i ))   (( PLAYER 2    Ammo : %i  Lifes : %i ))"
+			, App->player_1->GetAmmo(), App->player_1->GetLifes(), App->player_2->GetAmmo(), App->player_2->GetLifes());
+	}
+	else
+	{
+		sprintf_s(title, "PRESS SPACE TO RESTART");
+	}
+
 	App->window->SetTitle(title);
 
 
