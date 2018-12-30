@@ -5,6 +5,7 @@
 #include "PhysBody3D.h"
 #include "PhysVehicle3D.h"
 #include "ModulePlayer.h"
+#include "ModulePhysics3D.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -97,6 +98,49 @@ bool ModuleSceneIntro::Start()
 	platformMH.SetRotation(90, vec3(0, 1, 0));
 	stagePrimitives.add(App->physics->AddBody(platformMH, 0.0f));
 
+	// Turbine 1----------------------------------------------
+
+	Cube axis(2, 2, 2);
+	axis.SetPos(0, 1, -65);
+	axis.color = { 255 / 255, 0, 255 / 255, 0.2f };
+	//stagePrimitives.add(App->physics->AddBody(axis, 0.0f));
+
+	PhysBody3D* body1;
+	body1 = App->physics->AddBody(axis, 0.0f);
+
+	Cube helix(10, 2, 1);
+	helix.SetPos(-17.5, 3.5f, -50);
+	helix.color = { 255, 0, 255, 1.0f };
+	stagePrimitives.add(App->physics->AddBody(helix, 1.0f));
+
+	PhysBody3D* body2;
+	body2 = App->physics->AddBody(helix, 1.0f);
+
+	btHingeConstraint* hinge = App->physics->AddConstraintHinge(*body1, *body2, vec3{ 0,0,0 }, vec3{ 5, 0,0 }, vec3{ 0,1,0 }, vec3{ 0,1,0 }, true);
+
+	hinge->setLimit(1.0f, 0);
+
+	// Turbine 2----------------------------------------------
+
+	Cube axis2(2, 2, 2);
+	axis2.SetPos(0, 1, 65);
+	axis2.color = { 255 / 255, 0, 255 / 255, 0.2f };
+	//stagePrimitives.add(App->physics->AddBody(axis2, 0.0f));
+
+	PhysBody3D* body3;
+	body3 = App->physics->AddBody(axis2, 0.0f);
+
+	Cube helix2(10, 2, 1);
+	helix2.SetPos(-17.5, 3.5f, 50);
+	helix2.color = { 255, 0, 255, 255 };
+	stagePrimitives.add(App->physics->AddBody(helix2, 1.0f));
+
+	PhysBody3D* body4;
+	body4 = App->physics->AddBody(helix2, 1.0f);
+
+	btHingeConstraint* hinge2 = App->physics->AddConstraintHinge(*body3, *body4, vec3{ 0,0,0 }, vec3{ 5, 0,0 }, vec3{ 0,1,0 }, vec3{ 0,1,0 }, true);
+
+	hinge2->setLimit(1.0f, 0);
 
 	// BORDERS --------------------------------------------------------
 	Color colorBorders(1.0f, 1.0f, 0, 0.5f);
@@ -125,22 +169,16 @@ bool ModuleSceneIntro::Start()
 	// Power Up Spawners  ------------------------------ 
 
 	AddPowerUpSpawner(vec3(0, 3, 0)); //Middle
-
 	AddPowerUpSpawner(vec3(-40, 1.5f, 0)); //MiddleRight
-
 	AddPowerUpSpawner(vec3(40, 1.5f, 0)); //MiddleLeft
-
 	AddPowerUpSpawner(vec3(40, 1.5f, 90)); //Border UpperLeft
-
 	AddPowerUpSpawner(vec3(-40, 1.5f, 90)); //Border UpperRight
-	
 	AddPowerUpSpawner(vec3(40, 1.5f, -90)); //Border BottomLeft
-
 	AddPowerUpSpawner(vec3(-40, 1.5f, -90)); //Border BottomRight
+	AddPowerUpSpawner(vec3(25, 4, 0)); //Platform Left
+	AddPowerUpSpawner(vec3(-25, 4, 0)); //Platform Right
 
-	AddPowerUpSpawner(vec3(25, 4.5, 0)); //Platform Left
 
-	AddPowerUpSpawner(vec3(-25, 4.5, 0)); //Platform Right
 
 	return ret;
 }
