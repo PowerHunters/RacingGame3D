@@ -8,7 +8,7 @@
 #define PU_LEVITATION_OFFSET 0.4F
 #define RESPAWN_TIME 10000.F
 #define BTW_ROUNDS_TIME 4000.F
-#define PLAYER_INIT_LIFES 2
+#define PLAYER_INIT_LIFES 5
 
 struct PhysBody3D;
 struct PhysVehicle3D;
