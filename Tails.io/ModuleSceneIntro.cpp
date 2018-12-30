@@ -24,7 +24,7 @@ bool ModuleSceneIntro::Start()
 
 	// Stage Primitives ------------------------------ !!	Add all to stagePrimitives List
 
-	Color colorBorders (200.f /255.f ,200.f / 255.f , 0 ,1.0f );
+	Color colorBorders (1.0f , 1.0f , 0 ,0.5f );
 	// BORDERS --------------------------------------------------------
 	Cube border1(100, 10, 1); //spawn player 1
 	border1.SetPos(0, 0, 100);

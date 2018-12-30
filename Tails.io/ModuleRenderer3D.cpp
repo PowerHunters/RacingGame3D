@@ -96,6 +96,10 @@ bool ModuleRenderer3D::Init()
 		lights[1].diffuse.Set(0.3f, 0.3f, 0.3f, 1.0f);
 		lights[1].Init();
 
+		glEnable(GL_BLEND_COLOR);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 	
