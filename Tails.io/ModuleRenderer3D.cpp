@@ -21,19 +21,19 @@ bool ModuleRenderer3D::Init()
 {
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
-	
+
 	//Create context
 	context = SDL_GL_CreateContext(App->window->window);
-	if(context == NULL)
+	if (context == NULL)
 	{
 		LOG("OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
-	
-	if(ret == true)
+
+	if (ret == true)
 	{
 		//Use Vsync
-		if(VSYNC && SDL_GL_SetSwapInterval(1) < 0)
+		if (VSYNC && SDL_GL_SetSwapInterval(1) < 0)
 			LOG("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 
 		//Initialize Projection Matrix
@@ -42,7 +42,7 @@ bool ModuleRenderer3D::Init()
 
 		//Check for error
 		GLenum error = glGetError();
-		if(error != GL_NO_ERROR)
+		if (error != GL_NO_ERROR)
 		{
 			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
@@ -54,56 +54,55 @@ bool ModuleRenderer3D::Init()
 
 		//Check for error
 		error = glGetError();
-		if(error != GL_NO_ERROR)
+		if (error != GL_NO_ERROR)
 		{
 			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
-		
+
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 		glClearDepth(1.0f);
-		
+
 		//Initialize clear color
-		glClearColor(104 / 255.f, 210 / 255.f, 237 / 255.f,  1.f);
+		glClearColor(200 / 255.f, 100 / 255.f, 100 / 255.f, 1.f);
 
 		//Check for error
 		error = glGetError();
-		if(error != GL_NO_ERROR)
+		if (error != GL_NO_ERROR)
 		{
 			LOG("Error initializing OpenGL! %s\n", gluErrorString(error));
 			ret = false;
 		}
-		
-		GLfloat LightModelAmbient[] = {0.6F, 0.6F, 0.6F, 1.0F };
+
+		GLfloat LightModelAmbient[] = { 0.15f, 0.15f, 0.15f, 1.0f };
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
-		
+
 		GLfloat MaterialAmbient[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, MaterialAmbient);
 
 		GLfloat MaterialDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, MaterialDiffuse);
 
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
-		glEnable(GL_LIGHTING);
-		glEnable(GL_COLOR_MATERIAL);
-
+		lights[0].ref = GL_LIGHT0;
 		lights[0].Active(true);
-		lights[1].Active(true);
-
-		lights[0].ref = 0;
 		lights[0].ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
-		lights[0].diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
-		lights[0].SetPos(0.0f, 0.0f, 2.5f);
+		lights[0].diffuse.Set(0.3f, 0.3f, 0.3f, 1.0f);
 		lights[0].Init();
 
-		lights[1].ref = 1;
+	
+		lights[1].ref = GL_LIGHT1;
+		lights[1].Active(true);
 		lights[1].ambient.Set(0.25f, 0.25f, 0.25f, 1.0f);
-		lights[1].diffuse.Set(0.75f, 0.75f, 0.75f, 1.0f);
-		lights[1].SetPos(0.0f, 0.0f, 2.5f);
+		lights[1].diffuse.Set(0.3f, 0.3f, 0.3f, 1.0f);
 		lights[1].Init();
-		
 
+
+
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_CULL_FACE);
+	
+		glEnable(GL_LIGHTING);
+		glEnable(GL_COLOR_MATERIAL);
 	}
 
 	// Projection matrix for
@@ -131,11 +130,6 @@ update_status ModuleRenderer3D::PostUpdate(float dt)
 
 bool ModuleRenderer3D::Draw()
 {
-	// light 0 on cam pos
-
-	lights[0].SetPos(App->camera_1->Position.x, App->camera_1->Position.y, App->camera_1->Position.z);
-	lights[1].SetPos(App->camera_2->Position.x, App->camera_2->Position.y, App->camera_2->Position.z);
-
 	for (uint i = 0; i < MAX_LIGHTS; ++i)
 	{
 		lights[i].Render();
@@ -158,7 +152,7 @@ bool ModuleRenderer3D::CleanUp()
 
 void ModuleRenderer3D::OnResize(int width, int height)
 {
-	//glViewport(0, 0, width, height);
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	ProjectionMatrix = perspective(60.0f, (float)width / (float)height, 0.125f, 512.0f);

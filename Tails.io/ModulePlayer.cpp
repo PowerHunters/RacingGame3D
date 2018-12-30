@@ -218,6 +218,20 @@ update_status ModulePlayer::Update(float dt)
 	playerCar->Turn(turn);
 	playerCar->Brake(brake);
 
+	// Update light -----------------------------------------------
+	btVector3 offset(0,0, -2);
+	btVector3 Z(0, 0, 1);
+	btQuaternion q = playerCar->vehicle->getChassisWorldTransform().getRotation();
+
+	offset = offset.rotate(q.getAxis(), q.getAngle());
+	Z = Z.rotate(q.getAxis(), q.getAngle());
+	vec3 lightPos = playerCar->GetPos() + vec3(offset.getX(), offset.getY(), offset.getZ());
+
+
+
+	App->renderer3D->lights[playerNum - 1].SetPos(lightPos.x , lightPos.y, lightPos.z);
+	App->renderer3D->lights[playerNum - 1].SetDirection(vec3(Z.getX(), Z.getY(), Z.getZ()));
+
 	// Update Missiles  -------------------------------------------
 
 	p2List_item<Missile*> * item = missiles.getFirst() ;
