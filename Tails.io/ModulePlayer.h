@@ -30,6 +30,14 @@ private:
 
 class Missile;
 
+enum class PlayerState 
+{
+	winner,
+	loser,
+	dead,
+	alive
+};
+
 class ModulePlayer : public Module
 {
 public:
@@ -50,14 +58,16 @@ public:
 
 public:
 	vec3 initPosition;
+
 	Color firstColor;
 	Color secondColor;
+	Color deadColor;
+	Color winnerColor;
+	Color loserColor;
 
 private:
-
+	PlayerState state = PlayerState::alive;
 	int lifes = 3;
-	bool isDead = false;
-
 	int  ammo = 0;
 	uint playerNum = 0u;
 
