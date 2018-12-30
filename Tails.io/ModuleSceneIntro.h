@@ -89,5 +89,6 @@ private:
 
 	friend PowerUpSpawner;
 
-	uint reload_fx;
+	uint reload_fx = 0;
+	uint ready_go_fx = 0;
 };

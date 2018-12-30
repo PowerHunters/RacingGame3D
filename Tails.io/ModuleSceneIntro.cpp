@@ -22,7 +22,7 @@ bool ModuleSceneIntro::Start()
 
 	App->audio->PlayMusic("music/racetrack.ogg");
 	reload_fx = App->audio->LoadFx("sfx/reload.wav");
-
+	ready_go_fx = App->audio->LoadFx("sfx/readysetgo.wav");
 	// Stage Primitives ------------------------------ !!	Add all to stagePrimitives List
 
 	// RAMPS -------------------------------------------------
@@ -176,7 +176,7 @@ bool ModuleSceneIntro::Start()
 	AddPowerUpSpawner(vec3(25, 4, 0)); //Platform Left
 	AddPowerUpSpawner(vec3(-25, 4, 0)); //Platform Right
 
-
+	App->audio->PlayFx(ready_go_fx);
 
 	return ret;
 }
@@ -321,6 +321,7 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 
 bool ModuleSceneIntro::ResetScene()
 {
+	App->audio->PlayFx(ready_go_fx);
 	App->player_1->Reset();
 	App->player_2->Reset();
 	return true;
