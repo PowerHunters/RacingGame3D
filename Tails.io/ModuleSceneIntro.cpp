@@ -232,19 +232,23 @@ update_status ModuleSceneIntro::Update(float dt)
 		sceneToReset = false;
 	}
 
-	p2List_item<PowerUp*> *item = powerUps.getFirst();
-	p2List_item<PowerUp*> *iterator = nullptr;
-
 	// Update Power Up Spawners ---------------------------------
 
 	for (p2List_item<PowerUpSpawner*> *item = stageSpawners.getFirst(); item; item = item->next)
 	{
-		item->data->Update();
+		item->data->Update(dt);
 	}
 
 	// Update Power Ups -----------------------------------------
+
+	p2List_item<PowerUp*> *item = powerUps.getFirst();
+	p2List_item<PowerUp*> *iterator = nullptr;
+
+
 	while (item != nullptr)
 	{
+		item->data->Update(dt);
+
 		if (item->data->toDelete == true)
 		{
 			iterator = item->next;
@@ -393,10 +397,16 @@ PowerUp::~PowerUp()
 
 void PowerUp::Render()
 {
-	Sphere sphere(0.6f);
-	sphere.color = Green;
-	sphere.SetPos(sensor->GetPos().x, sensor->GetPos().y, sensor->GetPos().z);
-	sphere.Render();
+	Cube cube(1.0f,1.0f,1.0f);
+	cube.color = Green;
+	cube.SetPos(sensor->GetPos().x, sensor->GetPos().y, sensor->GetPos().z);
+	cube.SetRotation(angle, vec3(1, 1, 0));
+	cube.Render();
+}
+
+void PowerUp::Update(float dt)
+{
+	angle = angle +  0.7f;
 }
 
 PowerUpSpawner::PowerUpSpawner(vec3 position, Application * app): position(position), App(app)
@@ -426,7 +436,7 @@ void PowerUpSpawner::StartRespawnTime()
 	powerUpTaked = true;
 }
 
-void PowerUpSpawner::Update()
+void PowerUpSpawner::Update(float dt)
 {
 	if (spawnTimer.Read() > RESPAWN_TIME && powerUpTaked == true)
 	{

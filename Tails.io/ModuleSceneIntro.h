@@ -23,12 +23,13 @@ public:
 	~PowerUp();
 
 	void Render();
-
+	void Update(float dt);
 private:
 	vec3 position;
 	bool toDelete = false;
 	PhysBody3D* sensor = nullptr;
 	PowerUpSpawner* spawner = nullptr;
+	float angle = 0.0f;
 
 private:
 	friend ModuleSceneIntro;
@@ -42,7 +43,7 @@ public:
 	~PowerUpSpawner();
 
 	void StartRespawnTime();
-	void Update();
+	void Update(float dt);
 
 private:
 	bool AddPowerUp(vec3 position);
@@ -84,11 +85,11 @@ private:
 	p2List<PowerUp*>         powerUps;
 	Timer                    playerDeadTimer;
 
-	bool sceneToReset = false;
+	uint reload_fx = 0;
+	uint ready_go_fx = 0;
 
+	bool sceneToReset = false;
 
 	friend PowerUpSpawner;
 
-	uint reload_fx = 0;
-	uint ready_go_fx = 0;
 };
