@@ -30,49 +30,49 @@ bool ModuleSceneIntro::Start()
 	Cube rampHLB(10, 0.5f, 9); //Ramp HigherLeftBottom
 	rampHLB.SetPos(25, 0, -65);
 	rampHLB.SetRotation(-30, vec3(1, 0, 0));
-	rampHLB.color = { 255,0,255,255 };
+	rampHLB.color = { 255/255,0,255/255,255/255 };
 	stagePrimitives.add(App->physics->AddBody(rampHLB, 0.0f));
 
 	Cube rampHRB(10, 0.5f, 9); //Ramp HigherRightBottom
 	rampHRB.SetPos(-25, 0, -65);
 	rampHRB.SetRotation(-30, vec3(1, 0, 0));
-	rampHRB.color = { 255,0,255,255 };
+	rampHRB.color = { 0,255/255,255 / 255,255 / 255 };
 	stagePrimitives.add(App->physics->AddBody(rampHRB, 0.0f));
 
 	Cube rampHLU(10, 0.5f, 9); //Ramp HigherLeftUpper
 	rampHLU.SetPos(25, 0, 65);
 	rampHLU.SetRotation(30, vec3(1, 0, 0));
-	rampHLU.color = { 255,0,255,255 };
+	rampHLU.color = { 255 / 255,0,255 / 255,255 / 255 };
 	stagePrimitives.add(App->physics->AddBody(rampHLU, 0.0f));
 
 	Cube rampHRU(10, 0.5f, 9); //Ramp HigherRightUpper
 	rampHRU.SetPos(-25, 0, 65);
 	rampHRU.SetRotation(30, vec3(1, 0, 0));
-	rampHRU.color = { 255,0,255,255 };
+	rampHRU.color = { 0,255 / 255,255 / 255,255 / 255 };
 	stagePrimitives.add(App->physics->AddBody(rampHRU, 0.0f));
 
 	Cube rampLB(10, 0.5f, 9); //Ramp LowerBottom
 	rampLB.SetPos(0, 0, -25);
 	rampLB.SetRotation(-15, vec3(1, 0, 0));
-	rampLB.color = { 255,0,255,255 };
+	rampLB.color = { 0,128/255,255 / 255,255 / 255 };
 	stagePrimitives.add(App->physics->AddBody(rampLB, 0.0f));
 
 	Cube rampLU(10, 0.5f, 9); //Ramp LowerUpper
 	rampLU.SetPos(0, 0, 25);
 	rampLU.SetRotation(15, vec3(1, 0, 0));
-	rampLU.color = { 255,0,255,255 };
+	rampLU.color = { 0, 128 / 255,255 / 255,255 / 255 };
 	stagePrimitives.add(App->physics->AddBody(rampLU, 0.0f));
 
 	Cube rampLL(10, 0.5f, 9); //Ramp LowerLeft
 	rampLL.SetPos(13, 0, 0);
 	rampLL.SetRotation(-15, vec3(0, 0, 1));
-	rampLL.color = { 255,0,255,255 };
+	rampLL.color = { 0,128 / 255,255 / 255,0.5f };
 	stagePrimitives.add(App->physics->AddBody(rampLL, 0.0f));
 
 	Cube rampLR(10, 0.5f, 9); //Ramp LowerRight
 	rampLR.SetPos(-13, 0, 0);
 	rampLR.SetRotation(15, vec3(0, 0, 1));
-	rampLR.color = { 255,0,255,255 };
+	rampLR.color = { 0,128 / 255,255 / 255,0.5f };
 	stagePrimitives.add(App->physics->AddBody(rampLR, 0.0f));
 
 	// PLATFORMS -------------------------------------------------
@@ -84,17 +84,17 @@ bool ModuleSceneIntro::Start()
 
 	Cube platformR(10, 0.5f, 122); //Platform Right
 	platformR.SetPos(-25, 2.25f, 0);
-	platformR.color = { 255 / 255,0,255 / 255,0.5f };
+	platformR.color = { 0,255/255 ,255 / 255,1.0f };
 	stagePrimitives.add(App->physics->AddBody(platformR, 0.0f));
 
 	Cube platformMV(10, 0.5f, 41); //Platform MiddleVertical
 	platformMV.SetPos(0, 1.25f, 0);
-	platformMV.color = { 255 / 255,0,255 / 255,0.5f };
+	platformMV.color = { 0,128/255,255 / 255,1.0f };
 	stagePrimitives.add(App->physics->AddBody(platformMV, 0.0f));
 
 	Cube platformMH(9, 0.5f, 16); //Platform MiddleHoritzontal
 	platformMH.SetPos(0, 1.25f, 0);
-	platformMH.color = { 255 / 255,0,255 / 255,0.5f };
+	platformMH.color = { 0,128 / 255,255 / 255,0.5f };
 	platformMH.SetRotation(90, vec3(0, 1, 0));
 	stagePrimitives.add(App->physics->AddBody(platformMH, 0.0f));
 
@@ -102,7 +102,7 @@ bool ModuleSceneIntro::Start()
 
 	Cube axis(1, 3, 1.0f);
 	axis.SetPos(0, 1, -65);
-	axis.color = { 255 / 255, 0, 255 / 255, 0.2f };
+	axis.color = { 255 / 255, 0, 0, 0.2f };
 
 	PhysBody3D* body1;
 	body1 = App->physics->AddBody(axis, 0.0f);
@@ -110,7 +110,7 @@ bool ModuleSceneIntro::Start()
 
 	Cube helix(10, 2, 1);
 	helix.SetPos(-17.5, 3.5f, -50);
-	helix.color = { 255, 0, 255, 1.0f };
+	helix.color = { 255 / 255,0,0,255 / 255 };
 
 	PhysBody3D* body2;
 	body2 = App->physics->AddBody(helix, 1.0f);
@@ -123,7 +123,7 @@ bool ModuleSceneIntro::Start()
 
 	Cube axis2(1,3,1);
 	axis2.SetPos(0, 1, 65);
-	axis2.color = { 255 / 255, 0, 255 / 255, 0.2f };
+	axis2.color = { 255 / 255, 0, 0, 0.2f };
 	
 	PhysBody3D* body3;
 	body3 = App->physics->AddBody(axis2, 0.0f);
@@ -131,7 +131,7 @@ bool ModuleSceneIntro::Start()
 
 	Cube helix2(10, 2, 1);
 	helix2.SetPos(-17.5, 3.5f, 50);
-	helix2.color = { 255, 0, 255, 255 };
+	helix2.color = { 255 / 255,0,0,255 / 255 };
 
 	PhysBody3D* body4;
 	body4 = App->physics->AddBody(helix2, 1.0f);
