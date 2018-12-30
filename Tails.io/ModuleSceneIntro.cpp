@@ -84,12 +84,12 @@ bool ModuleSceneIntro::Start()
 
 	Cube platformR(10, 0.5f, 122); //Platform Right
 	platformR.SetPos(-25, 2.25f, 0);
-	platformR.color = { 0,255/255 ,255 / 255,1.0f };
+	platformR.color = { 0,255/255 ,255 / 255,0.5f };
 	stagePrimitives.add(App->physics->AddBody(platformR, 0.0f));
 
 	Cube platformMV(10, 0.5f, 41); //Platform MiddleVertical
 	platformMV.SetPos(0, 1.25f, 0);
-	platformMV.color = { 0,128/255,255 / 255,1.0f };
+	platformMV.color = { 0,128/255,255 / 255,0.5f };
 	stagePrimitives.add(App->physics->AddBody(platformMV, 0.0f));
 
 	Cube platformMH(9, 0.5f, 16); //Platform MiddleHoritzontal
