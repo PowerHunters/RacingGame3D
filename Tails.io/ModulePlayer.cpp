@@ -293,9 +293,8 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 			{
 				--playerToKill->lifes;
 
-				if (playerToKill->lifes < 0)
+				if (playerToKill->lifes == 0)
 				{
-					playerToKill->lifes = 0;
 					playerToKill->state = PlayerState::loser;
 					state = PlayerState::winner;
 					App->scene_intro->haveWinner = true;
