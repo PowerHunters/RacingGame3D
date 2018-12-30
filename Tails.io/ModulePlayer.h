@@ -43,10 +43,19 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 	void AddMissile();
+	void AddAmmo();
+
 	PhysVehicle3D* GetPlayerCar();
 
+public:
 	vec3 initPosition;
+
 private:
+
+	int lifes = 3;
+	bool dead = false;
+
+	int  ammo = 0;
 	uint playerNum = 0u;
 
 	PhysVehicle3D* playerCar = nullptr;

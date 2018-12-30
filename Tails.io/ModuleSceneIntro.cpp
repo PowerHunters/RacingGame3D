@@ -19,6 +19,7 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
+	// Stage Primitives ------------------------------ !!	Add all to stagePrimitives List
 	Cube cube(4, 4, 6);
 	cube.SetPos(0, 2, 20); 
 
@@ -31,7 +32,9 @@ bool ModuleSceneIntro::Start()
 	ramp.SetRotation(-42, vec3(1, 0, 0));
 	stagePrimitives.add(App->physics->AddBody(ramp, 0.0f));
 
-	AddPowerUp(vec3(0, 1, 0));
+	// Power Up Spawners Primitives ------------------------------ 
+
+	AddPowerUpSpawner(vec3(0, 1.5f, 0));
 
 	return ret;
 }
@@ -40,7 +43,7 @@ bool ModuleSceneIntro::Start()
 bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
-	// Render all stage primitives -----------------------------------
+	// Delete all stage primitives -----------------------------------
 	for (p2List_item<PhysBody3D*> *item = stagePrimitives.getFirst(); item; item = item->next)
 	{
 		App->physics->DeleteBody(item->data);
@@ -48,7 +51,16 @@ bool ModuleSceneIntro::CleanUp()
 
 	stagePrimitives.clear();
 
-	// Render all power ups ------------------------------------------
+
+	// Delete all power up spawners ------------------------------------------
+	for (p2List_item<PowerUpSpawner*> *item = stageSpawners.getFirst(); item; item = item->next)
+	{
+		delete item->data;
+	}
+
+	stageSpawners.clear();
+
+	// Delete all power ups ------------------------------------------
 	for (p2List_item<PowerUp*> *item = powerUps.getFirst(); item; item = item->next)
 	{
 		App->physics->DeleteBody(item->data->sensor);
@@ -64,28 +76,79 @@ bool ModuleSceneIntro::CleanUp()
 update_status ModuleSceneIntro::Update(float dt)
 {
 
+	p2List_item<PowerUp*> *item = powerUps.getFirst();
+	p2List_item<PowerUp*> *iterator = nullptr;
+
+	// Update Power Up Spawners ---------------------------------
+
+	for (p2List_item<PowerUpSpawner*> *item = stageSpawners.getFirst(); item; item = item->next)
+	{
+		item->data->Update();
+	}
+
+	// Update Power Ups -----------------------------------------
+	while (item != nullptr)
+	{
+		if (item->data->toDelete == true)
+		{
+			iterator = item->next;
+			App->physics->DeleteBody(item->data->sensor);
+			delete item->data;
+			powerUps.del(item);
+			item = iterator;
+		}
+		else
+		{
+			item = item->next;
+		}
+	}
+
 	return UPDATE_CONTINUE;
 }
 
 void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 {
-	if (body1 == test && App->player_1->GetPlayerCar() == body2)
+	PhysVehicle3D* player_1 = App->player_1->GetPlayerCar();
+	PhysVehicle3D* player_2 = App->player_2->GetPlayerCar();
+
+	if (player_1 == body2 || player_2 == body2)
 	{
-		LOG("DAMN");
+		PowerUp* powerUp = nullptr;
+
+		for (p2List_item<PowerUp*>* item = powerUps.getFirst(); item; item = item->next)
+		{
+			if (item->data->sensor == body1)
+			{
+				powerUp = item->data;
+			}
+		}
+
+		if (powerUp == nullptr)
+		{
+			return;
+		}
+
+		powerUp->spawner->StartRespawnTime();
+		powerUp->toDelete = true;
+
+		if (player_1 == body2)
+		{
+			LOG("Added 3 ammo player 1");
+			App->player_1->AddAmmo();
+		}
+		else if (player_2 == body2)
+		{
+			LOG("Added 3 ammo player 2");
+			App->player_2->AddAmmo();
+		}
 	}
-
-
-
-
-
-
 
 }
 
-bool ModuleSceneIntro::AddPowerUp(vec3 position)
+bool ModuleSceneIntro::AddPowerUpSpawner(vec3 position)
 {
-	PowerUp* power = new PowerUp(position, App);
-	powerUps.add(power);
+	PowerUpSpawner* spawner = new PowerUpSpawner(position, App);
+	stageSpawners.add(spawner);
 	return true;
 }
 
@@ -128,14 +191,46 @@ PowerUp::~PowerUp()
 {
 }
 
-void PowerUp::Update()
-{
-}
-
 void PowerUp::Render()
 {
 	Sphere sphere(0.4f);
 	sphere.color = Red;
 	sphere.SetPos(sensor->GetPos().x, sensor->GetPos().y, sensor->GetPos().z);
 	sphere.Render();
+}
+
+PowerUpSpawner::PowerUpSpawner(vec3 position, Application * app): position(position), App(app)
+{
+	AddPowerUp(position);
+	powerUpTaked = false;
+
+}
+
+PowerUpSpawner::~PowerUpSpawner()
+{
+}
+
+bool PowerUpSpawner::AddPowerUp(vec3 position)
+{
+	PowerUp* power = new PowerUp(position, App);
+	power->spawner = this;
+	App->scene_intro->powerUps.add(power);
+	
+	return true;
+}
+
+
+void PowerUpSpawner::StartRespawnTime()
+{
+	spawnTimer.Start();
+	powerUpTaked = true;
+}
+
+void PowerUpSpawner::Update()
+{
+	if (spawnTimer.Read() > RESPAWN_TIME && powerUpTaked == true)
+	{
+		AddPowerUp(position);
+		powerUpTaked = false;
+	}
 }

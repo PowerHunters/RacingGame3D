@@ -173,7 +173,12 @@ update_status ModulePlayer::Update(float dt)
 
 		if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
 		{
-			AddMissile();
+			if (ammo > 0)
+			{
+				AddMissile();
+				--ammo;
+			}
+			
 		}
 	}
 
@@ -209,17 +214,20 @@ update_status ModulePlayer::Update(float dt)
 
 		if (App->input->GetKey(SDL_SCANCODE_KP_0) == KEY_DOWN)
 		{
-			AddMissile();
+			if (ammo > 0)
+			{
+				AddMissile();
+				--ammo;
+			}
 		}
 	}
 	
-
 	playerCar->ApplyEngineForce(acceleration);
 	playerCar->Turn(turn);
 	playerCar->Brake(brake);
 
 	// Update light -----------------------------------------------
-	btVector3 offset(0,0, -2);
+	btVector3 offset(0,0,1.5f);
 	btVector3 Z(0, 0, 1);
 	btQuaternion q = playerCar->vehicle->getChassisWorldTransform().getRotation();
 
@@ -227,11 +235,8 @@ update_status ModulePlayer::Update(float dt)
 	Z = Z.rotate(q.getAxis(), q.getAngle());
 	vec3 lightPos = playerCar->GetPos() + vec3(offset.getX(), offset.getY(), offset.getZ());
 
-
-
 	App->renderer3D->lights[playerNum - 1].SetPos(lightPos.x , lightPos.y, lightPos.z);
-	App->renderer3D->lights[playerNum - 1].SetDirection(vec3(Z.getX(), Z.getY(), Z.getZ()));
-
+	App->renderer3D->lights[playerNum].SetPos(lightPos.x, lightPos.y, lightPos.z);
 	// Update Missiles  -------------------------------------------
 
 	p2List_item<Missile*> * item = missiles.getFirst() ;
@@ -289,7 +294,10 @@ void ModulePlayer::AddMissile()
 	missiles.add(missile);
 }
 
-
+void ModulePlayer::AddAmmo()
+{
+	ammo += 3;
+}
 
 PhysVehicle3D * ModulePlayer::GetPlayerCar()
 {

@@ -110,10 +110,10 @@ bool ModuleCamera3D:: CameraFollowPlayer()
 	mat4x4 t;
 
 	vehicleToFollow->vehicle->getChassisWorldTransform().getOpenGLMatrix(&t);
-	offset.setValue(0, 3.5f, -9.0f);
+	offset.setValue(0, 0, -9.0f);
 	offset = offset.rotate(q.getAxis(), q.getAngle());
 
-	vec3 camera_pos = vehicleToFollow->GetPos() + vec3(offset.getX(), offset.getY(), offset.getZ());
+	vec3 camera_pos = vehicleToFollow->GetPos() + vec3(offset.getX(), 3.5f, offset.getZ());
 
 	Position = camera_pos;
 	LookAt(vehicleToFollow->GetPos());
