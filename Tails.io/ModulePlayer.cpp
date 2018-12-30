@@ -355,6 +355,8 @@ void ModulePlayer::Reset()
 		App->physics->DeleteBody(item->data->physBody);
 		delete item->data;
 	}
+
+	missiles.clear();
 }
 
 int ModulePlayer::GetLifes()
