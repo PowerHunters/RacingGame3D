@@ -7,9 +7,26 @@
 #include "Timer.h"
 #include "ModuleSceneIntro.h"
 
-ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), playerCar(NULL)
+ModulePlayer::ModulePlayer(Application* app, uint playerNum, bool start_enabled) : Module(app, start_enabled), playerCar(NULL)
 {
 	turn = acceleration = brake = 0.0f;
+	this->playerNum = playerNum;
+
+	switch (playerNum)
+	{
+	case 1:
+		initPosition.Set(0, 0, 20);
+		firstColor = Red;
+		secondColor = White;
+		break;
+	case 2:
+		initPosition.Set(0, 0, -20);
+		firstColor = Blue;
+		secondColor = White;
+		break;
+	}
+
+
 }
 
 ModulePlayer::~ModulePlayer()

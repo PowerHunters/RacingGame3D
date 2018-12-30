@@ -33,7 +33,7 @@ class Missile;
 class ModulePlayer : public Module
 {
 public:
-	ModulePlayer(Application* app, bool start_enabled = true);
+	ModulePlayer(Application* app, uint playerNum, bool start_enabled = true);
 	virtual ~ModulePlayer();
 
 	bool Start();
@@ -46,9 +46,13 @@ public:
 	PhysVehicle3D* GetPlayerCar();
 
 private:
-
+	uint playerNum = 0u;
+	vec3 initPosition;
 	PhysVehicle3D* playerCar = nullptr;
 	p2List<Missile*> missiles;
+
+	Color firstColor;
+	Color secondColor;
 
 	float turn;
 	float acceleration;

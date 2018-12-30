@@ -10,6 +10,7 @@
 struct PhysBody3D;
 struct PhysVehicle3D;
 struct PhysMotor3D;
+class ModuleSceneIntro;
 
 class PowerUp
 {
@@ -24,6 +25,9 @@ private:
 	vec3 position;
 	bool toDelete = false;
 	PhysBody3D* sensor = nullptr;
+
+private:
+	friend ModuleSceneIntro;
 };
 
 class ModuleSceneIntro : public Module

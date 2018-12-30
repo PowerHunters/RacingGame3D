@@ -40,6 +40,22 @@ bool ModuleSceneIntro::Start()
 bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
+	// Render all stage primitives -----------------------------------
+	for (p2List_item<PhysBody3D*> *item = stagePrimitives.getFirst(); item; item = item->next)
+	{
+		App->physics->DeleteBody(item->data);
+	}
+
+	stagePrimitives.clear();
+
+	// Render all power ups ------------------------------------------
+	for (p2List_item<PowerUp*> *item = powerUps.getFirst(); item; item = item->next)
+	{
+		App->physics->DeleteBody(item->data->sensor);
+		delete item->data;
+	}
+
+	powerUps.clear();
 
 	return true;
 }
@@ -57,6 +73,13 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 	{
 		LOG("DAMN");
 	}
+
+
+
+
+
+
+
 }
 
 bool ModuleSceneIntro::AddPowerUp(vec3 position)
