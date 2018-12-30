@@ -15,12 +15,12 @@ ModulePlayer::ModulePlayer(Application* app, uint playerNum, bool start_enabled)
 	switch (playerNum)
 	{
 	case 1:
-		initPosition.Set(0, 1, 10);
+		initPosition.Set(0, 1, 85);
 		firstColor = Red;
 		secondColor = White;
 		break;
 	case 2:
-		initPosition.Set(0, 1, -20);
+		initPosition.Set(0, 1, -85);
 		firstColor = Blue;
 		secondColor = White;
 		break;
@@ -118,6 +118,8 @@ bool ModulePlayer::Start()
 
 	playerCar = App->physics->AddVehicle(car);
 	playerCar->SetPos(initPosition.x, initPosition.y, initPosition.z);
+
+	//playerCar->vehicle->getRigidBody()->setWorldTransform();
 	
 	// Test tail ---------------------------
 	

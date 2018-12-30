@@ -20,21 +20,120 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 
 	// Stage Primitives ------------------------------ !!	Add all to stagePrimitives List
-	Cube cube(4, 4, 6);
-	cube.SetPos(0, 2, 20); 
 
-	test = App->physics->AddBody(cube, 0.0f);
-	test->collision_listeners.add(this);
-	stagePrimitives.add(test);
+	// BORDERS --------------------------------------------------------
+	Cube border1(100, 10, 1); //spawn player 1
+	border1.SetPos(0, 0, 100);
+	border1.color = { 255,255,0,255 };
+	stagePrimitives.add(App->physics->AddBody(border1, 0.0f));
 
-	Cube ramp(4, 0.5f, 9);
-	ramp.SetPos(0, 1, 14);
-	ramp.SetRotation(-42, vec3(1, 0, 0));
-	stagePrimitives.add(App->physics->AddBody(ramp, 0.0f));
+	Cube border2(1, 10, 200); //right player 2
+	border2.SetPos(-50, 0, 0);
+	border2.color = { 255,255,0,255 };
+	stagePrimitives.add(App->physics->AddBody(border2, 0.0f));
+
+	Cube border3(100, 10, 1); //spawn player 2
+	border3.SetPos(0, 0, -100);
+	border3.color = { 255,255,0,255 };
+	stagePrimitives.add(App->physics->AddBody(border3, 0.0f));
+
+	Cube border4(1, 10, 200); //left player 2
+	border4.SetPos(50, 0, 0);
+	border4.color = { 255,255,0,255 };
+	stagePrimitives.add(App->physics->AddBody(border4, 0.0f));
+
+	// RAMPS -------------------------------------------------
+
+	Cube rampHLB(10, 0.5f, 9); //Ramp HigherLeftBottom
+	rampHLB.SetPos(25, 0, -65);
+	rampHLB.SetRotation(-30, vec3(1, 0, 0));
+	rampHLB.color = { 255,0,255,255 };
+	stagePrimitives.add(App->physics->AddBody(rampHLB, 0.0f));
+
+	Cube rampHRB(10, 0.5f, 9); //Ramp HigherRightBottom
+	rampHRB.SetPos(-25, 0, -65);
+	rampHRB.SetRotation(-30, vec3(1, 0, 0));
+	rampHRB.color = { 255,0,255,255 };
+	stagePrimitives.add(App->physics->AddBody(rampHRB, 0.0f));
+
+	Cube rampHLU(10, 0.5f, 9); //Ramp HigherLeftUpper
+	rampHLU.SetPos(25, 0, 65);
+	rampHLU.SetRotation(30, vec3(1, 0, 0));
+	rampHLU.color = { 255,0,255,255 };
+	stagePrimitives.add(App->physics->AddBody(rampHLU, 0.0f));
+
+	Cube rampHRU(10, 0.5f, 9); //Ramp HigherRightUpper
+	rampHRU.SetPos(-25, 0, 65);
+	rampHRU.SetRotation(30, vec3(1, 0, 0));
+	rampHRU.color = { 255,0,255,255 };
+	stagePrimitives.add(App->physics->AddBody(rampHRU, 0.0f));
+
+	Cube rampLB(10, 0.5f, 9); //Ramp LowerBottom
+	rampLB.SetPos(0, 0, -25);
+	rampLB.SetRotation(-15, vec3(1, 0, 0));
+	rampLB.color = { 255,0,255,255 };
+	stagePrimitives.add(App->physics->AddBody(rampLB, 0.0f));
+
+	Cube rampLU(10, 0.5f, 9); //Ramp LowerUpper
+	rampLU.SetPos(0, 0, 25);
+	rampLU.SetRotation(15, vec3(1, 0, 0));
+	rampLU.color = { 255,0,255,255 };
+	stagePrimitives.add(App->physics->AddBody(rampLU, 0.0f));
+
+	Cube rampLL(10, 0.5f, 9); //Ramp LowerLeft
+	rampLL.SetPos(13, 0, 0);
+	rampLL.SetRotation(-15, vec3(0, 0, 1));
+	rampLL.color = { 255,0,255,255 };
+	stagePrimitives.add(App->physics->AddBody(rampLL, 0.0f));
+
+	Cube rampLR(10, 0.5f, 9); //Ramp LowerRight
+	rampLR.SetPos(-13, 0, 0);
+	rampLR.SetRotation(15, vec3(0, 0, 1));
+	rampLR.color = { 255,0,255,255 };
+	stagePrimitives.add(App->physics->AddBody(rampLR, 0.0f));
+
+	// PLATFORMS -------------------------------------------------
+	
+	Cube platformL(10, 0.5f, 122); //Platform Left
+	platformL.SetPos(25, 2.25f, 0);
+	platformL.color = { 255,0,255,255 };
+	stagePrimitives.add(App->physics->AddBody(platformL, 0.0f));
+
+	Cube platformR(10, 0.5f, 122); //Platform Right
+	platformR.SetPos(-25, 2.25f, 0);
+	platformR.color = { 255,0,255,255 };
+	stagePrimitives.add(App->physics->AddBody(platformR, 0.0f));
+
+	Cube platformMV(10, 0.5f, 41); //Platform MiddleVertical
+	platformMV.SetPos(0, 1.25f, 0);
+	platformMV.color = { 255,0,255,255 };
+	stagePrimitives.add(App->physics->AddBody(platformMV, 0.0f));
+
+	Cube platformMH(9, 0.5f, 16); //Platform MiddleHoritzontal
+	platformMH.SetPos(0, 1.25f, 0);
+	platformMH.color = { 255,0,255,255 };
+	platformMH.SetRotation(90, vec3(0, 1, 0));
+	stagePrimitives.add(App->physics->AddBody(platformMH, 0.0f));
 
 	// Power Up Spawners Primitives ------------------------------ 
 
-	AddPowerUpSpawner(vec3(0, 1.5f, 0));
+	AddPowerUpSpawner(vec3(0, 3, 0)); //Middle
+
+	AddPowerUpSpawner(vec3(-40, 1.5f, 0)); //MiddleRight
+
+	AddPowerUpSpawner(vec3(40, 1.5f, 0)); //MiddleLeft
+
+	AddPowerUpSpawner(vec3(40, 1.5f, 90)); //Border UpperLeft
+
+	AddPowerUpSpawner(vec3(-40, 1.5f, 90)); //Border UpperRight
+	
+	AddPowerUpSpawner(vec3(40, 1.5f, -90)); //Border BottomLeft
+
+	AddPowerUpSpawner(vec3(-40, 1.5f, -90)); //Border BottomRight
+
+	AddPowerUpSpawner(vec3(25, 4.5, 0)); //Platform Left
+
+	AddPowerUpSpawner(vec3(-25, 4.5, 0)); //Platform Right
 
 	return ret;
 }
