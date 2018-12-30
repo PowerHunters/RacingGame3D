@@ -100,46 +100,44 @@ bool ModuleSceneIntro::Start()
 
 	// Turbine 1----------------------------------------------
 
-	Cube axis(2, 2, 2);
+	Cube axis(1, 3, 1.0f);
 	axis.SetPos(0, 1, -65);
 	axis.color = { 255 / 255, 0, 255 / 255, 0.2f };
-	//stagePrimitives.add(App->physics->AddBody(axis, 0.0f));
 
 	PhysBody3D* body1;
 	body1 = App->physics->AddBody(axis, 0.0f);
+	stagePrimitives.add(body1);
 
 	Cube helix(10, 2, 1);
 	helix.SetPos(-17.5, 3.5f, -50);
 	helix.color = { 255, 0, 255, 1.0f };
-	stagePrimitives.add(App->physics->AddBody(helix, 1.0f));
 
 	PhysBody3D* body2;
 	body2 = App->physics->AddBody(helix, 1.0f);
+	stagePrimitives.add(body2);
 
-	btHingeConstraint* hinge = App->physics->AddConstraintHinge(*body1, *body2, vec3{ 0,0,0 }, vec3{ 5, 0,0 }, vec3{ 0,1,0 }, vec3{ 0,1,0 }, true);
-
+	btHingeConstraint* hinge = App->physics->AddConstraintHinge(*body1, *body2, vec3{ 0,0,0 }, vec3{ 5,0,0 }, vec3{ 0,1,0 }, vec3{ 0,1,0 }, true);
 	hinge->setLimit(1.0f, 0);
 
 	// Turbine 2----------------------------------------------
 
-	Cube axis2(2, 2, 2);
+	Cube axis2(1,3,1);
 	axis2.SetPos(0, 1, 65);
 	axis2.color = { 255 / 255, 0, 255 / 255, 0.2f };
-	//stagePrimitives.add(App->physics->AddBody(axis2, 0.0f));
-
+	
 	PhysBody3D* body3;
 	body3 = App->physics->AddBody(axis2, 0.0f);
+	stagePrimitives.add(body3);
 
 	Cube helix2(10, 2, 1);
 	helix2.SetPos(-17.5, 3.5f, 50);
 	helix2.color = { 255, 0, 255, 255 };
-	stagePrimitives.add(App->physics->AddBody(helix2, 1.0f));
 
 	PhysBody3D* body4;
 	body4 = App->physics->AddBody(helix2, 1.0f);
+	stagePrimitives.add(body4);
 
 	btHingeConstraint* hinge2 = App->physics->AddConstraintHinge(*body3, *body4, vec3{ 0,0,0 }, vec3{ 5, 0,0 }, vec3{ 0,1,0 }, vec3{ 0,1,0 }, true);
-
 	hinge2->setLimit(1.0f, 0);
 
 	// BORDERS --------------------------------------------------------

@@ -16,11 +16,6 @@ PhysBody3D::~PhysBody3D()
 	{
 		delete primitive;
 	}
-
-	if (body != nullptr)
-	{
-		delete body;
-	}
 }
 
 btRigidBody* PhysBody3D::GetBody()
