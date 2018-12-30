@@ -21,25 +21,26 @@ bool ModuleSceneIntro::Start()
 
 	// Stage Primitives ------------------------------ !!	Add all to stagePrimitives List
 
+	Color colorBorders (200.f /255.f ,200.f / 255.f , 0 ,1.0f );
 	// BORDERS --------------------------------------------------------
 	Cube border1(100, 10, 1); //spawn player 1
 	border1.SetPos(0, 0, 100);
-	border1.color = { 255,255,0,255 };
+	border1.color = colorBorders;
 	stagePrimitives.add(App->physics->AddBody(border1, 0.0f));
 
 	Cube border2(1, 10, 200); //right player 2
 	border2.SetPos(-50, 0, 0);
-	border2.color = { 255,255,0,255 };
+	border2.color = colorBorders;
 	stagePrimitives.add(App->physics->AddBody(border2, 0.0f));
 
 	Cube border3(100, 10, 1); //spawn player 2
 	border3.SetPos(0, 0, -100);
-	border3.color = { 255,255,0,255 };
+	border3.color = colorBorders;
 	stagePrimitives.add(App->physics->AddBody(border3, 0.0f));
 
 	Cube border4(1, 10, 200); //left player 2
 	border4.SetPos(50, 0, 0);
-	border4.color = { 255,255,0,255 };
+	border4.color = colorBorders;
 	stagePrimitives.add(App->physics->AddBody(border4, 0.0f));
 
 	// RAMPS -------------------------------------------------

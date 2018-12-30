@@ -185,7 +185,6 @@ update_status ModulePlayer::Update(float dt)
 				AddMissile();
 				--ammo;
 			}
-			
 		}
 	}
 
@@ -282,6 +281,8 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 			if (item->data->physBody == body1)
 			{
 				LOG("DAMN");
+				item->data->toDelete = true;
+				// TODO : SFX IMPACT
 			}
 		}
 	}
