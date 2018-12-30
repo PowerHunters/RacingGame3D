@@ -79,4 +79,6 @@ private:
 	p2List<PowerUp*>    powerUps;
 
 	friend PowerUpSpawner;
+
+	uint reload_fx;
 };

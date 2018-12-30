@@ -19,6 +19,9 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
+	App->audio->PlayMusic("music/racetrack.ogg");
+	reload_fx = App->audio->LoadFx("sfx/reload.wav");
+
 	// Stage Primitives ------------------------------ !!	Add all to stagePrimitives List
 
 	Color colorBorders (200.f /255.f ,200.f / 255.f , 0 ,1.0f );
@@ -97,22 +100,22 @@ bool ModuleSceneIntro::Start()
 	
 	Cube platformL(10, 0.5f, 122); //Platform Left
 	platformL.SetPos(25, 2.25f, 0);
-	platformL.color = { 255,0,255,255 };
+	platformL.color = { 255/255,0,255/255,0.5f };
 	stagePrimitives.add(App->physics->AddBody(platformL, 0.0f));
 
 	Cube platformR(10, 0.5f, 122); //Platform Right
 	platformR.SetPos(-25, 2.25f, 0);
-	platformR.color = { 255,0,255,255 };
+	platformR.color = { 255 / 255,0,255 / 255,0.5f };
 	stagePrimitives.add(App->physics->AddBody(platformR, 0.0f));
 
 	Cube platformMV(10, 0.5f, 41); //Platform MiddleVertical
 	platformMV.SetPos(0, 1.25f, 0);
-	platformMV.color = { 255,0,255,255 };
+	platformMV.color = { 255 / 255,0,255 / 255,0.5f };
 	stagePrimitives.add(App->physics->AddBody(platformMV, 0.0f));
 
 	Cube platformMH(9, 0.5f, 16); //Platform MiddleHoritzontal
 	platformMH.SetPos(0, 1.25f, 0);
-	platformMH.color = { 255,0,255,255 };
+	platformMH.color = { 255 / 255,0,255 / 255,0.5f };
 	platformMH.SetRotation(90, vec3(0, 1, 0));
 	stagePrimitives.add(App->physics->AddBody(platformMH, 0.0f));
 
@@ -235,11 +238,13 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 		{
 			LOG("Added 3 ammo player 1");
 			App->player_1->AddAmmo();
+			App->audio->PlayFx(reload_fx);
 		}
 		else if (player_2 == body2)
 		{
 			LOG("Added 3 ammo player 2");
 			App->player_2->AddAmmo();
+			App->audio->PlayFx(reload_fx);
 		}
 	}
 

@@ -126,6 +126,9 @@ bool ModulePlayer::Start()
 		playerCar->GetBody()->getWorldTransform().setRotation(q);
 	}
 
+	explosion_fx = App->audio->LoadFx("sfx/explosion.wav");
+	shoot_fx = App->audio->LoadFx("sfx/shoot.wav");
+
 	// Test tail ---------------------------
 	
 	PhysBody3D * tailBall = nullptr;
@@ -184,6 +187,7 @@ update_status ModulePlayer::Update(float dt)
 			{
 				AddMissile();
 				--ammo;
+				App->audio->PlayFx(shoot_fx);
 			}
 		}
 	}
@@ -224,6 +228,7 @@ update_status ModulePlayer::Update(float dt)
 			{
 				AddMissile();
 				--ammo;
+				App->audio->PlayFx(shoot_fx);
 			}
 		}
 	}
@@ -281,8 +286,9 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 			if (item->data->physBody == body1)
 			{
 				LOG("DAMN");
+				App->audio->PlayFx(explosion_fx);
 				item->data->toDelete = true;
-				// TODO : SFX IMPACT
+
 			}
 		}
 	}
