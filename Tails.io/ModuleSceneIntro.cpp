@@ -19,6 +19,9 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
+	App->audio->PlayMusic("music/racetrack.ogg");
+	reload_fx = App->audio->LoadFx("sfx/reload.wav");
+
 	// Stage Primitives ------------------------------ !!	Add all to stagePrimitives List
 
 	// BORDERS --------------------------------------------------------
@@ -234,11 +237,13 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 		{
 			LOG("Added 3 ammo player 1");
 			App->player_1->AddAmmo();
+			App->audio->PlayFx(reload_fx);
 		}
 		else if (player_2 == body2)
 		{
 			LOG("Added 3 ammo player 2");
 			App->player_2->AddAmmo();
+			App->audio->PlayFx(reload_fx);
 		}
 	}
 

@@ -67,4 +67,7 @@ private:
 	float turn;
 	float acceleration;
 	float brake;
+
+	uint explosion_fx;
+	uint shoot_fx;
 };
