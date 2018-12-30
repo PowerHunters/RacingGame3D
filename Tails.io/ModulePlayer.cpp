@@ -167,12 +167,12 @@ update_status ModulePlayer::Update(float dt)
 			}
 
 
-			if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
+			if (App->input->GetKey(SDL_SCANCODE_C) == KEY_REPEAT)
 			{
 				brake = BRAKE_POWER;
 			}
 
-			if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
+			if (App->input->GetKey(SDL_SCANCODE_V) == KEY_DOWN)
 			{
 				if (ammo > 0)
 				{
@@ -208,12 +208,12 @@ update_status ModulePlayer::Update(float dt)
 			}
 
 
-			if (App->input->GetKey(SDL_SCANCODE_KP_ENTER) == KEY_REPEAT)
+			if (App->input->GetKey(SDL_SCANCODE_O) == KEY_REPEAT)
 			{
 				brake = BRAKE_POWER;
 			}
 
-			if (App->input->GetKey(SDL_SCANCODE_KP_0) == KEY_DOWN)
+			if (App->input->GetKey(SDL_SCANCODE_P) == KEY_DOWN)
 			{
 				if (ammo > 0)
 				{
