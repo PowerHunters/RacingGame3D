@@ -321,7 +321,8 @@ void ModulePlayer::Reset()
 	{
 
 	}
-
+	playerCar->GetBody()->setLinearVelocity(btVector3(0, 0, 0));
+	playerCar->GetBody()->setAngularVelocity(btVector3(0, 0, 0));
 	playerCar->SetPos(initPosition.x, initPosition.y, initPosition.z);
 
 }

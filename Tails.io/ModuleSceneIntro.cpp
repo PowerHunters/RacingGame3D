@@ -233,7 +233,7 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 		{
 			return;
 		}
-
+		ResetScene(); //Test
 		powerUp->spawner->StartRespawnTime();
 		powerUp->toDelete = true;
 
@@ -310,8 +310,8 @@ PowerUp::~PowerUp()
 
 void PowerUp::Render()
 {
-	Sphere sphere(0.4f);
-	sphere.color = Red;
+	Sphere sphere(0.6f);
+	sphere.color = Green;
 	sphere.SetPos(sensor->GetPos().x, sensor->GetPos().y, sensor->GetPos().z);
 	sphere.Render();
 }
