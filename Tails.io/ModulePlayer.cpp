@@ -341,6 +341,16 @@ void ModulePlayer::Reset()
 	}
 }
 
+int ModulePlayer::GetLifes()
+{
+	return lifes;
+}
+
+int ModulePlayer::GetAmmo()
+{
+	return ammo;
+}
+
 PhysVehicle3D * ModulePlayer::GetPlayerCar()
 {
 	return playerCar;

@@ -53,6 +53,8 @@ public:
 	void AddMissile();
 	void AddAmmo();
 	void Reset();
+	int  GetLifes();
+	int  GetAmmo();
 
 	PhysVehicle3D* GetPlayerCar();
 
@@ -73,8 +75,6 @@ private:
 
 	PhysVehicle3D* playerCar = nullptr;
 	p2List<Missile*> missiles;
-
-
 
 	float turn;
 	float acceleration;

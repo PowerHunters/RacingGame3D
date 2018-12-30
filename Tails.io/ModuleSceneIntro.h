@@ -68,6 +68,7 @@ public:
 	bool Draw();
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 	bool ResetScene();
+	bool ResetGame();
 	bool StartAfterDeadTimer();
 
 private:
@@ -78,6 +79,7 @@ private:
 	p2List<PhysBody3D*>      stagePrimitives;
 	p2List<PowerUp*>         powerUps;
 	Timer                    playerDeadTimer;
+	Timer                    gameTimer;
 
 	bool sceneToReset = false;
 

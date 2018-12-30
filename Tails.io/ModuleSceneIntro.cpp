@@ -252,6 +252,12 @@ update_status ModuleSceneIntro::Update(float dt)
 		}
 	}
 
+	// Update title --------------------------------------------
+	char title[100];
+	sprintf_s(title, " FastTails.io ");
+	App->window->SetTitle(title);
+
+
 	return UPDATE_CONTINUE;
 }
 
