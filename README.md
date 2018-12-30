@@ -1,6 +1,6 @@
 ﻿# Version of the game
 
-FastTails.io v.1.0
+FastTails.io v.1.1
 
 ## Description
 
