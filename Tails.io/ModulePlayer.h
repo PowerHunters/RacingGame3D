@@ -55,6 +55,8 @@ public:
 	void Reset();
 	int  GetLifes();
 	int  GetAmmo();
+	void  SetLifes(int lifes);
+	void  SetAmmo(int ammo);
 
 	PhysVehicle3D* GetPlayerCar();
 
@@ -69,7 +71,7 @@ public:
 
 private:
 	PlayerState state = PlayerState::alive;
-	int lifes = 3;
+	int  lifes = PLAYER_INIT_LIFES;
 	int  ammo = 0;
 	uint playerNum = 0u;
 

@@ -217,6 +217,13 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
+	// If game ends reset with enter ------------------------
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && haveWinner == true)
+	{
+		ResetGame();
+		haveWinner = false;
+	}
+
 	// Reset ------------------------------------------------
 
 	if (sceneToReset == true && playerDeadTimer.Read() > BTW_ROUNDS_TIME)
@@ -306,7 +313,15 @@ bool ModuleSceneIntro::ResetScene()
 {
 	App->player_1->Reset();
 	App->player_2->Reset();
-	//TODO SFX READY...
+	return true;
+}
+
+bool ModuleSceneIntro::ResetGame()
+{
+	App->player_1->SetLifes(PLAYER_INIT_LIFES);
+	App->player_2->SetLifes(PLAYER_INIT_LIFES);
+	ResetScene();
+	
 	return true;
 }
 

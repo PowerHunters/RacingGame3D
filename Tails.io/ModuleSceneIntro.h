@@ -8,6 +8,7 @@
 #define PU_LEVITATION_OFFSET 0.4F
 #define RESPAWN_TIME 10000.F
 #define BTW_ROUNDS_TIME 4000.F
+#define PLAYER_INIT_LIFES 2
 
 struct PhysBody3D;
 struct PhysVehicle3D;
@@ -74,14 +75,17 @@ public:
 private:
 	bool AddPowerUpSpawner(vec3 position);
 
+public:
+	bool haveWinner = false;
+
 private:
 	p2List<PowerUpSpawner*>  stageSpawners;
 	p2List<PhysBody3D*>      stagePrimitives;
 	p2List<PowerUp*>         powerUps;
 	Timer                    playerDeadTimer;
-	Timer                    gameTimer;
 
 	bool sceneToReset = false;
+
 
 	friend PowerUpSpawner;
 

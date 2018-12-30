@@ -291,8 +291,21 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 		{
 			if (item->data->physBody == body1 && playerToKill->state == PlayerState::alive)
 			{
-				playerToKill->state = PlayerState::dead;
-				App->scene_intro->StartAfterDeadTimer();
+				--playerToKill->lifes;
+
+				if (playerToKill->lifes < 0)
+				{
+					playerToKill->lifes = 0;
+					playerToKill->state = PlayerState::loser;
+					state = PlayerState::winner;
+					App->scene_intro->haveWinner = true;
+				}
+				else
+				{
+					playerToKill->state = PlayerState::dead;
+					App->scene_intro->StartAfterDeadTimer();
+				}
+
 				App->audio->PlayFx(explosion_fx);
 				item->data->toDelete = true;
 
@@ -315,8 +328,12 @@ void ModulePlayer::AddAmmo()
 void ModulePlayer::Reset()
 {
 	ammo = 0;
-	state = PlayerState::alive;
 
+	if (state != PlayerState::winner || state != PlayerState::loser)
+	{
+		state = PlayerState::alive;
+	}
+	
 	playerCar->GetBody()->getWorldTransform().setIdentity();
 
 	if (playerNum == 1)
@@ -349,6 +366,16 @@ int ModulePlayer::GetLifes()
 int ModulePlayer::GetAmmo()
 {
 	return ammo;
+}
+
+void ModulePlayer::SetLifes(int lifes)
+{
+	this->lifes = lifes;
+}
+
+void ModulePlayer::SetAmmo(int ammo)
+{
+	this->ammo = ammo;
 }
 
 PhysVehicle3D * ModulePlayer::GetPlayerCar()
