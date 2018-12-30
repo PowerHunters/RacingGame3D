@@ -50,6 +50,8 @@ public:
 
 public:
 	vec3 initPosition;
+	Color firstColor;
+	Color secondColor;
 
 private:
 
@@ -62,8 +64,7 @@ private:
 	PhysVehicle3D* playerCar = nullptr;
 	p2List<Missile*> missiles;
 
-	Color firstColor;
-	Color secondColor;
+
 
 	float turn;
 	float acceleration;

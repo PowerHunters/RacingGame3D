@@ -117,22 +117,11 @@ bool ModulePlayer::Start()
 	car.wheels[3].steering = false;
 
 	playerCar = App->physics->AddVehicle(car);
-	playerCar->SetPos(initPosition.x, initPosition.y, initPosition.z);
-
-	if (playerNum == 1) 
-	{
-		btQuaternion q;
-		q.setRotation(btVector3(0, 1, 0), DEGTORAD* 180);
-		playerCar->GetBody()->getWorldTransform().setRotation(q);
-	}
 
 	explosion_fx = App->audio->LoadFx("sfx/explosion.wav");
 	shoot_fx = App->audio->LoadFx("sfx/shoot.wav");
 
-	// Test tail ---------------------------
-	
-	PhysBody3D * tailBall = nullptr;
-	PhysBody3D * iterator = nullptr;
+	Reset();
 
 	return true;
 }
@@ -151,87 +140,91 @@ update_status ModulePlayer::Update(float dt)
 
 	turn = acceleration = brake = 0.0f;
 
-	if (playerNum == 1)
+	if (isDead == false)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+		if (playerNum == 1)
 		{
-			acceleration = MAX_ACCELERATION;
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-		{
-			if (turn < TURN_DEGREES)
-				turn += TURN_DEGREES;
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-		{
-			if (turn > -TURN_DEGREES)
-				turn -= TURN_DEGREES;
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
-		{
-			acceleration = -MAX_ACCELERATION;
-		}
-
-
-		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
-		{
-			brake = BRAKE_POWER;
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
-		{
-			if (ammo > 0)
+			if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
 			{
-				AddMissile();
-				--ammo;
-				App->audio->PlayFx(shoot_fx);
+				acceleration = MAX_ACCELERATION;
+			}
+
+			if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+			{
+				if (turn < TURN_DEGREES)
+					turn += TURN_DEGREES;
+			}
+
+			if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+			{
+				if (turn > -TURN_DEGREES)
+					turn -= TURN_DEGREES;
+			}
+
+			if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+			{
+				acceleration = -MAX_ACCELERATION;
+			}
+
+
+			if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
+			{
+				brake = BRAKE_POWER;
+			}
+
+			if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
+			{
+				if (ammo > 0)
+				{
+					AddMissile();
+					--ammo;
+					App->audio->PlayFx(shoot_fx);
+				}
+			}
+		}
+
+		else if (playerNum == 2)
+		{
+			if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+			{
+				acceleration = MAX_ACCELERATION;
+			}
+
+			if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+			{
+				if (turn < TURN_DEGREES)
+					turn += TURN_DEGREES;
+			}
+
+			if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+			{
+				if (turn > -TURN_DEGREES)
+					turn -= TURN_DEGREES;
+			}
+
+			if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+			{
+				acceleration = -MAX_ACCELERATION;
+			}
+
+
+			if (App->input->GetKey(SDL_SCANCODE_KP_ENTER) == KEY_REPEAT)
+			{
+				brake = BRAKE_POWER;
+			}
+
+			if (App->input->GetKey(SDL_SCANCODE_KP_0) == KEY_DOWN)
+			{
+				if (ammo > 0)
+				{
+					AddMissile();
+					--ammo;
+					App->audio->PlayFx(shoot_fx);
+				}
 			}
 		}
 	}
-
-	else if (playerNum == 2)
-	{
-		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-		{
-			acceleration = MAX_ACCELERATION;
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-		{
-			if (turn < TURN_DEGREES)
-				turn += TURN_DEGREES;
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		{
-			if (turn > -TURN_DEGREES)
-				turn -= TURN_DEGREES;
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-		{
-			acceleration = -MAX_ACCELERATION;
-		}
-
-
-		if (App->input->GetKey(SDL_SCANCODE_KP_ENTER) == KEY_REPEAT)
-		{
-			brake = BRAKE_POWER;
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_KP_0) == KEY_DOWN)
-		{
-			if (ammo > 0)
-			{
-				AddMissile();
-				--ammo;
-				App->audio->PlayFx(shoot_fx);
-			}
-		}
-	}
+	
 	
 	playerCar->ApplyEngineForce(acceleration);
 	playerCar->Turn(turn);
@@ -283,9 +276,10 @@ void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 	{
 		for (p2List_item<Missile*> * item = missiles.getFirst(); item; item = item->next)
 		{
-			if (item->data->physBody == body1)
+			if (item->data->physBody == body1 && playerToKill->isDead == false)
 			{
-				LOG("DAMN");
+				playerToKill->isDead = true;
+				App->scene_intro->StartAfterDeadTimer();
 				App->audio->PlayFx(explosion_fx);
 				item->data->toDelete = true;
 
@@ -310,9 +304,10 @@ void ModulePlayer::Reset()
 	ammo = 0;
 	isDead = false;
 
+	playerCar->GetBody()->getWorldTransform().setIdentity();
+
 	if (playerNum == 1)
 	{
-		playerCar->GetBody()->getWorldTransform().setIdentity();
 		btQuaternion q;
 		q.setRotation(btVector3(0, 1, 0), DEGTORAD * 180);
 		playerCar->GetBody()->getWorldTransform().setRotation(q);
@@ -341,6 +336,7 @@ Missile::Missile(ModulePlayer* owner)
 	timerToDelete.Start();
 
 	Sphere s(1);
+	s.color = owner->secondColor;
 	btVector3 offset;
 	btQuaternion q = owner->GetPlayerCar()->vehicle->getChassisWorldTransform().getRotation();
 
@@ -377,10 +373,9 @@ bool ModulePlayer::Draw()
 	// Draw missiles ================================================
 	for (p2List_item<Missile*> * item = missiles.getFirst(); item; item = item->next)
 	{
-		vec3 vec = item->data->physBody->GetPos();
-		Sphere s(1);
-		s.SetPos(vec.x, vec.y, vec.z);
-		s.Render();
+		vec3 pos = item->data->physBody->GetPos();
+		item->data->physBody->primitive->SetPos(pos.x, pos.y, pos.z);
+		item->data->physBody->primitive->Render();
 	}
 	
 	// Draw car ====================================================

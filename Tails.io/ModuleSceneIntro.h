@@ -6,7 +6,8 @@
 
 #define MAX_SNAKE 2
 #define PU_LEVITATION_OFFSET 0.4F
-#define RESPAWN_TIME 10000.0F
+#define RESPAWN_TIME 10000.F
+#define BTW_ROUNDS_TIME 4000.F
 
 struct PhysBody3D;
 struct PhysVehicle3D;
@@ -67,16 +68,18 @@ public:
 	bool Draw();
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 	bool ResetScene();
-
-	PhysBody3D* test = nullptr;
+	bool StartAfterDeadTimer();
 
 private:
 	bool AddPowerUpSpawner(vec3 position);
 
 private:
-	p2List<PowerUpSpawner*> stageSpawners;
-	p2List<PhysBody3D*> stagePrimitives;
-	p2List<PowerUp*>    powerUps;
+	p2List<PowerUpSpawner*>  stageSpawners;
+	p2List<PhysBody3D*>      stagePrimitives;
+	p2List<PowerUp*>         powerUps;
+	Timer                    playerDeadTimer;
+
+	bool sceneToReset = false;
 
 	friend PowerUpSpawner;
 

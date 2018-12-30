@@ -181,6 +181,13 @@ bool ModuleSceneIntro::CleanUp()
 // Update
 update_status ModuleSceneIntro::Update(float dt)
 {
+	// Reset ------------------------------------------------
+
+	if (sceneToReset == true && playerDeadTimer.Read() > BTW_ROUNDS_TIME)
+	{
+		ResetScene();
+		sceneToReset = false;
+	}
 
 	p2List_item<PowerUp*> *item = powerUps.getFirst();
 	p2List_item<PowerUp*> *iterator = nullptr;
@@ -233,7 +240,7 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 		{
 			return;
 		}
-		ResetScene(); //Test
+
 		powerUp->spawner->StartRespawnTime();
 		powerUp->toDelete = true;
 
@@ -257,6 +264,14 @@ bool ModuleSceneIntro::ResetScene()
 {
 	App->player_1->Reset();
 	App->player_2->Reset();
+	//TODO SFX READY...
+	return true;
+}
+
+bool ModuleSceneIntro::StartAfterDeadTimer()
+{
+	playerDeadTimer.Start();
+	sceneToReset = true;
 
 	return true;
 }
