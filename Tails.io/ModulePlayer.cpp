@@ -17,7 +17,7 @@ ModulePlayer::ModulePlayer(Application* app, uint playerNum, bool start_enabled)
 	case 1:
 		initPosition.Set(0, 1, 85);
 		firstColor = White;
-		secondColor = Red;
+		secondColor = {255.f/255.f,128.f / 255.f, 0.0f ,255.f / 255.f };
 		break;
 	case 2:
 		initPosition.Set(0, 1, -85);
@@ -321,6 +321,7 @@ void ModulePlayer::Reset()
 	{
 
 	}
+
 	playerCar->GetBody()->setLinearVelocity(btVector3(0, 0, 0));
 	playerCar->GetBody()->setAngularVelocity(btVector3(0, 0, 0));
 	playerCar->SetPos(initPosition.x, initPosition.y, initPosition.z);
@@ -482,6 +483,7 @@ bool ModulePlayer::Draw()
 	// Pilot  ---------------------------------
 	Sphere pilot;
 	pilot.radius = 0.2f;
+	pilot.color = { 60.f / 255.f, 60.f / 255.f, 60.f / 255.f, 255.f / 255.f, };
 	pilot.transform = t;
 
 	offset.setValue(0.0f, 0.65f, -0.4f);
