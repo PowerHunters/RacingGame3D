@@ -6,7 +6,7 @@
 
 #define MAX_SNAKE 2
 #define PU_LEVITATION_OFFSET 0.4F
-#define RESPAWN_TIME 5000.0F
+#define RESPAWN_TIME 10000.0F
 
 struct PhysBody3D;
 struct PhysVehicle3D;

@@ -42,7 +42,7 @@ bool ModulePlayer::Start()
 	// Car properties ---------------------------------------
 	car.chassis_size.Set(1.4F, 0.5f, 3);
 	car.chassis_offset.Set(0, 1, 0);
-	car.mass = 300.0f;
+	car.mass = 150.0f;
 	car.suspensionStiffness = 80.0F;
 	car.suspensionCompression = 0.2f;
 	car.suspensionDamping = 2.5F;
@@ -119,8 +119,13 @@ bool ModulePlayer::Start()
 	playerCar = App->physics->AddVehicle(car);
 	playerCar->SetPos(initPosition.x, initPosition.y, initPosition.z);
 
-	//playerCar->vehicle->getRigidBody()->setWorldTransform();
-	
+	if (playerNum == 1) 
+	{
+		btQuaternion q;
+		q.setRotation(btVector3(0, 1, 0), DEGTORAD* 180);
+		playerCar->GetBody()->getWorldTransform().setRotation(q);
+	}
+
 	// Test tail ---------------------------
 	
 	PhysBody3D * tailBall = nullptr;

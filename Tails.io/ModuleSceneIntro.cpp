@@ -115,7 +115,7 @@ bool ModuleSceneIntro::Start()
 	platformMH.SetRotation(90, vec3(0, 1, 0));
 	stagePrimitives.add(App->physics->AddBody(platformMH, 0.0f));
 
-	// Power Up Spawners Primitives ------------------------------ 
+	// Power Up Spawners  ------------------------------ 
 
 	AddPowerUpSpawner(vec3(0, 3, 0)); //Middle
 
