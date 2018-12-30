@@ -25,28 +25,6 @@ bool ModuleSceneIntro::Start()
 
 	// Stage Primitives ------------------------------ !!	Add all to stagePrimitives List
 
-	Color colorBorders (1.0f , 1.0f , 0 ,0.5f );
-	// BORDERS --------------------------------------------------------
-	Cube border1(100, 10, 1); //spawn player 1
-	border1.SetPos(0, 0, 100);
-	border1.color = colorBorders;
-	stagePrimitives.add(App->physics->AddBody(border1, 0.0f));
-
-	Cube border2(1, 10, 200); //right player 2
-	border2.SetPos(-50, 0, 0);
-	border2.color = colorBorders;
-	stagePrimitives.add(App->physics->AddBody(border2, 0.0f));
-
-	Cube border3(100, 10, 1); //spawn player 2
-	border3.SetPos(0, 0, -100);
-	border3.color = colorBorders;
-	stagePrimitives.add(App->physics->AddBody(border3, 0.0f));
-
-	Cube border4(1, 10, 200); //left player 2
-	border4.SetPos(50, 0, 0);
-	border4.color = colorBorders;
-	stagePrimitives.add(App->physics->AddBody(border4, 0.0f));
-
 	// RAMPS -------------------------------------------------
 
 	Cube rampHLB(10, 0.5f, 9); //Ramp HigherLeftBottom
@@ -119,6 +97,31 @@ bool ModuleSceneIntro::Start()
 	platformMH.color = { 255 / 255,0,255 / 255,0.5f };
 	platformMH.SetRotation(90, vec3(0, 1, 0));
 	stagePrimitives.add(App->physics->AddBody(platformMH, 0.0f));
+
+
+	// BORDERS --------------------------------------------------------
+	Color colorBorders(1.0f, 1.0f, 0, 0.5f);
+
+	Cube border1(100, 10, 1); //spawn player 1
+	border1.SetPos(0, 0, 100);
+	border1.color = colorBorders;
+	stagePrimitives.add(App->physics->AddBody(border1, 0.0f));
+
+	Cube border2(1, 10, 200); //right player 2
+	border2.SetPos(-50, 0, 0);
+	border2.color = colorBorders;
+	stagePrimitives.add(App->physics->AddBody(border2, 0.0f));
+
+	Cube border3(100, 10, 1); //spawn player 2
+	border3.SetPos(0, 0, -100);
+	border3.color = colorBorders;
+	stagePrimitives.add(App->physics->AddBody(border3, 0.0f));
+
+	Cube border4(1, 10, 200); //left player 2
+	border4.SetPos(50, 0, 0);
+	border4.color = colorBorders;
+	stagePrimitives.add(App->physics->AddBody(border4, 0.0f));
+
 
 	// Power Up Spawners  ------------------------------ 
 
@@ -263,7 +266,7 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 		{
 			return;
 		}
-
+		ResetScene(); //Test
 		powerUp->spawner->StartRespawnTime();
 		powerUp->toDelete = true;
 
@@ -306,6 +309,13 @@ bool ModuleSceneIntro::Draw()
 	ground.SetPos(0, -1, 0);
 	ground.Render();
 
+	// Render all power ups ------------------------------------------
+	for (p2List_item<PowerUp*> *item = powerUps.getFirst(); item; item = item->next)
+	{
+		item->data->Render();
+	}
+
+
 	// Render all stage primitives -----------------------------------
 	for (p2List_item<PhysBody3D*> *item = stagePrimitives.getFirst(); item; item = item->next)
 	{
@@ -313,12 +323,6 @@ bool ModuleSceneIntro::Draw()
 		item->data->GetBody()->getWorldTransform().getOpenGLMatrix(&t);
 		item->data->primitive->transform = t;
 		item->data->primitive->Render();
-	}
-
-	// Render all power ups ------------------------------------------
-	for (p2List_item<PowerUp*> *item = powerUps.getFirst(); item; item = item->next)
-	{
-		item->data->Render();
 	}
 
 	return true;
@@ -339,8 +343,8 @@ PowerUp::~PowerUp()
 
 void PowerUp::Render()
 {
-	Sphere sphere(0.4f);
-	sphere.color = Red;
+	Sphere sphere(0.6f);
+	sphere.color = Green;
 	sphere.SetPos(sensor->GetPos().x, sensor->GetPos().y, sensor->GetPos().z);
 	sphere.Render();
 }

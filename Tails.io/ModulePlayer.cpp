@@ -16,13 +16,13 @@ ModulePlayer::ModulePlayer(Application* app, uint playerNum, bool start_enabled)
 	{
 	case 1:
 		initPosition.Set(0, 1, 85);
-		firstColor = Red;
-		secondColor = White;
+		firstColor = White;
+		secondColor = {255.f/255.f,128.f / 255.f, 0.0f ,255.f / 255.f };
 		break;
 	case 2:
 		initPosition.Set(0, 1, -85);
-		firstColor = Blue;
-		secondColor = White;
+		firstColor = White;
+		secondColor = Blue;
 		break;
 	}
 
@@ -322,6 +322,8 @@ void ModulePlayer::Reset()
 
 	}
 
+	playerCar->GetBody()->setLinearVelocity(btVector3(0, 0, 0));
+	playerCar->GetBody()->setAngularVelocity(btVector3(0, 0, 0));
 	playerCar->SetPos(initPosition.x, initPosition.y, initPosition.z);
 
 }
@@ -400,6 +402,7 @@ bool ModulePlayer::Draw()
 
 	// Main chasis -------------------------------
 	Cube chassis_1(1.5f, 0.6, 1);
+	chassis_1.color = firstColor;
 	chassis_1.transform = t;
 
 	offset.setValue(0, 0.2f, -0.9f);
@@ -410,6 +413,7 @@ bool ModulePlayer::Draw()
 	chassis_1.transform.M[14] += offset.getZ();
 
 	Cube chassis_2(1.1f, 0.6, 1);
+	chassis_2.color = firstColor;
 	chassis_2.transform = t;
 
 	offset.setValue(0, 0.2f, 0.0f);
@@ -421,6 +425,7 @@ bool ModulePlayer::Draw()
 
 	Cube chassis_3(0.8, 0.4, 1.3f);
 	chassis_3.transform = t;
+	chassis_3.color = firstColor;
 
 	offset.setValue(0, 0.1f, 1.1f);
 	offset = offset.rotate(q.getAxis(), q.getAngle());
@@ -431,6 +436,7 @@ bool ModulePlayer::Draw()
 
 	// Front chasis ------------------------------
 	Cube front_chasis(2.3f, 0.15f, 0.5f);
+	front_chasis.color = secondColor;
 	front_chasis.transform = t;
 
 	offset.setValue(0.0f, 0.1f, 2.0f);
@@ -442,6 +448,7 @@ bool ModulePlayer::Draw()
 
 	// Rear chasis ------------------------------
 	Cube rear_chasis(2.1f, 0.15f, 0.5f);
+	rear_chasis.color = secondColor;
 	rear_chasis.transform = t;
 
 	offset.setValue(0.0f, 0.8f, -1.5f);
@@ -476,6 +483,7 @@ bool ModulePlayer::Draw()
 	// Pilot  ---------------------------------
 	Sphere pilot;
 	pilot.radius = 0.2f;
+	pilot.color = { 60.f / 255.f, 60.f / 255.f, 60.f / 255.f, 255.f / 255.f, };
 	pilot.transform = t;
 
 	offset.setValue(0.0f, 0.65f, -0.4f);
