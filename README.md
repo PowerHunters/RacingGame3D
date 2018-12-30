@@ -4,12 +4,12 @@ FastTails.io v.1.0
 
 ## Description
 
-In this version of the game you will be able to fully play the game. The game is a 1vs1 driving arcade game where each player controls a car that shoots bullets. The player that has killed the most wins. There are limited bullets, when you run out of them make sure to grab an sphere full of bullets.
+In this version of the game you will be able to fully play the game. The game is a 1vs1 driving arcade game where each player controls a car that shoots bullets. The player that has killed the most in a limited time wins. There are limited bullets, when you run out of them make sure to grab an sphere full of bullets.
 
 ## Links
 Lluis Moreu: https://github.com/youis11 
 
-Alejandro Gamarra: https://github.com/alejandro61299
+Alejandro Gamarra: https://githudb.com/alejandro61299
 
 Github repository: https://github.com/PowerHunters/RacingGame3D
 
@@ -23,17 +23,33 @@ Github organization: https://github.com/PowerHunters
 
 - WASD (to move).
 
-- SPACE (to shoot).
+- C (to brake).
+
+- V (to shoot).
 
 ### Player2
 
 - ARROW KEYS (to move).
 
-- M (to shoot).
+- O (to brake).
+
+- P (to shoot).
+
+### Debug
+
+- F1 (show figure shapes).
+
+- F2 (activate move camera).
+
+- WS (move Z camera).
+
+- AD (move X camera).
+
+- RF (move Y camera).
 
 ## Main goal
 
-- Beat the other player by killing him more times than he killed you.
+- Beat the other player by killing him more times than he killed you in a limited time.
 
 ## Instructions to execute
 
@@ -47,7 +63,15 @@ Github organization: https://github.com/PowerHunters
 
 ## Artist references
 
-IDK
+Shoot fx called "shoot" by [Leszek_Szary](https://freesound.org/people/Leszek_Szary/sounds/146730/) .
+
+Reload fx called "1911 Reload" by [nioczkus](https://freesound.org/people/nioczkus/sounds/396331/) .
+
+Music called "Race Track" by [FoolBoyMedia](https://freesound.org/people/FoolBoyMedia/sounds/237089/) .
+
+Initial fx called "Ready set go" by [Daniel787546](https://freesound.org/people/Daniel787546/sounds/331371/) .
+
+Explosion fx called "Small Explosion" by [ryansnook](https://freesound.org/people/ryansnook/sounds/110115/) .
 
 ## MIT License
 
