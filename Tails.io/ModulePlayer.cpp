@@ -45,10 +45,10 @@ bool ModulePlayer::Start()
 	car.mass = 150.0f;
 	car.suspensionStiffness = 80.0F;
 	car.suspensionCompression = 0.2f;
-	car.suspensionDamping = 2.5F;
-	car.maxSuspensionTravelCm = 500.0f;
+	car.suspensionDamping = 20.0f;
+	car.maxSuspensionTravelCm = 200.0f;
 	car.frictionSlip = 1000.0f;
-	car.maxSuspensionForce = 4000.0f;
+	car.maxSuspensionForce = 6000.0f;
 	// Wheel properties ---------------------------------------
 	float connection_height = 0.9f;
 	float front_wheel_radius = 0.4f;
@@ -297,6 +297,27 @@ void ModulePlayer::AddMissile()
 void ModulePlayer::AddAmmo()
 {
 	ammo += 3;
+}
+
+void ModulePlayer::Reset()
+{
+	ammo = 0;
+	isDead = false;
+
+	if (playerNum == 1)
+	{
+		playerCar->GetBody()->getWorldTransform().setIdentity();
+		btQuaternion q;
+		q.setRotation(btVector3(0, 1, 0), DEGTORAD * 180);
+		playerCar->GetBody()->getWorldTransform().setRotation(q);
+	}
+	else if (playerNum == 2)
+	{
+
+	}
+
+	playerCar->SetPos(initPosition.x, initPosition.y, initPosition.z);
+
 }
 
 PhysVehicle3D * ModulePlayer::GetPlayerCar()

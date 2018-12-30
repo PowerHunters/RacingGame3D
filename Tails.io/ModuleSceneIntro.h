@@ -66,6 +66,8 @@ public:
 
 	bool Draw();
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
+	bool ResetScene();
+
 	PhysBody3D* test = nullptr;
 
 private:

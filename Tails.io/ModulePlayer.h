@@ -44,6 +44,7 @@ public:
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 	void AddMissile();
 	void AddAmmo();
+	void Reset();
 
 	PhysVehicle3D* GetPlayerCar();
 
@@ -53,7 +54,7 @@ public:
 private:
 
 	int lifes = 3;
-	bool dead = false;
+	bool isDead = false;
 
 	int  ammo = 0;
 	uint playerNum = 0u;

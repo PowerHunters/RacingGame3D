@@ -245,6 +245,14 @@ void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 
 }
 
+bool ModuleSceneIntro::ResetScene()
+{
+	App->player_1->Reset();
+	App->player_2->Reset();
+
+	return true;
+}
+
 bool ModuleSceneIntro::AddPowerUpSpawner(vec3 position)
 {
 	PowerUpSpawner* spawner = new PowerUpSpawner(position, App);
