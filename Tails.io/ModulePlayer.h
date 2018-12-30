@@ -45,9 +45,10 @@ public:
 	void AddMissile();
 	PhysVehicle3D* GetPlayerCar();
 
+	vec3 initPosition;
 private:
 	uint playerNum = 0u;
-	vec3 initPosition;
+
 	PhysVehicle3D* playerCar = nullptr;
 	p2List<Missile*> missiles;
 

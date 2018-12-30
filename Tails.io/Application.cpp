@@ -8,9 +8,10 @@ Application::Application()
 	scene_intro = new ModuleSceneIntro(this);
 	renderer3D = new ModuleRenderer3D(this);
 	physics = new ModulePhysics3D(this);
-	player = new ModulePlayer(this);
-	camera_1 = new ModuleCamera3D(this, 1, player);
-	camera_2 = new ModuleCamera3D(this, 2, player);
+	player_1 = new ModulePlayer(this, 1);
+	player_2 = new ModulePlayer(this, 2);
+	camera_1 = new ModuleCamera3D(this, 1, player_1);
+	camera_2 = new ModuleCamera3D(this, 2, player_2);
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
@@ -25,7 +26,8 @@ Application::Application()
 	AddModule(scene_intro);
 
 	// Cameras & Players
-	AddModule(player);
+	AddModule(player_1);
+	AddModule(player_2);
 	AddModule(camera_1);
 	AddModule(camera_2);
 

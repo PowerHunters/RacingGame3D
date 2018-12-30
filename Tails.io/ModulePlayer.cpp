@@ -15,12 +15,12 @@ ModulePlayer::ModulePlayer(Application* app, uint playerNum, bool start_enabled)
 	switch (playerNum)
 	{
 	case 1:
-		initPosition.Set(0, 0, 20);
+		initPosition.Set(0, 1, 10);
 		firstColor = Red;
 		secondColor = White;
 		break;
 	case 2:
-		initPosition.Set(0, 0, -20);
+		initPosition.Set(0, 1, -20);
 		firstColor = Blue;
 		secondColor = White;
 		break;
@@ -117,7 +117,7 @@ bool ModulePlayer::Start()
 	car.wheels[3].steering = false;
 
 	playerCar = App->physics->AddVehicle(car);
-	playerCar->SetPos(0, 1, 10);
+	playerCar->SetPos(initPosition.x, initPosition.y, initPosition.z);
 	
 	// Test tail ---------------------------
 	
@@ -141,38 +141,78 @@ update_status ModulePlayer::Update(float dt)
 
 	turn = acceleration = brake = 0.0f;
 
-	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+	if (playerNum == 1)
 	{
-		acceleration = MAX_ACCELERATION;
+		if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
+		{
+			acceleration = MAX_ACCELERATION;
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+		{
+			if (turn < TURN_DEGREES)
+				turn += TURN_DEGREES;
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+		{
+			if (turn > -TURN_DEGREES)
+				turn -= TURN_DEGREES;
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT)
+		{
+			acceleration = -MAX_ACCELERATION;
+		}
+
+
+		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
+		{
+			brake = BRAKE_POWER;
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_G) == KEY_DOWN)
+		{
+			AddMissile();
+		}
 	}
 
-	if(App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+	else if (playerNum == 2)
 	{
-		if(turn < TURN_DEGREES)
-			turn +=  TURN_DEGREES;
-	}
+		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+		{
+			acceleration = MAX_ACCELERATION;
+		}
 
-	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-	{
-		if(turn > -TURN_DEGREES)
-			turn -= TURN_DEGREES;
-	}
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+		{
+			if (turn < TURN_DEGREES)
+				turn += TURN_DEGREES;
+		}
 
-	if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-	{
-		acceleration = - MAX_ACCELERATION;
-	}
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		{
+			if (turn > -TURN_DEGREES)
+				turn -= TURN_DEGREES;
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+		{
+			acceleration = -MAX_ACCELERATION;
+		}
 
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
-	{
-		brake = BRAKE_POWER;
-	}
+		if (App->input->GetKey(SDL_SCANCODE_KP_ENTER) == KEY_REPEAT)
+		{
+			brake = BRAKE_POWER;
+		}
 
-	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
-	{
-		AddMissile();
+		if (App->input->GetKey(SDL_SCANCODE_KP_0) == KEY_DOWN)
+		{
+			AddMissile();
+		}
 	}
+	
 
 	playerCar->ApplyEngineForce(acceleration);
 	playerCar->Turn(turn);
@@ -205,7 +245,19 @@ update_status ModulePlayer::Update(float dt)
 
 void ModulePlayer::OnCollision(PhysBody3D * body1, PhysBody3D * body2)
 {
-	if (App->scene_intro->test == body2)
+	ModulePlayer* playerToKill = nullptr;
+
+	switch (playerNum)
+	{
+	case 1:
+		playerToKill = App->player_2;
+		break;
+	case 2:
+		playerToKill = App->player_1;
+		break;
+	}
+
+	if (body2 == playerToKill->playerCar)
 	{
 		for (p2List_item<Missile*> * item = missiles.getFirst(); item; item = item->next)
 		{
@@ -241,7 +293,7 @@ Missile::Missile(ModulePlayer* owner)
 	btVector3 offset;
 	btQuaternion q = owner->GetPlayerCar()->vehicle->getChassisWorldTransform().getRotation();
 
-	offset.setValue(0, 0.5f, 6);
+	offset.setValue(0, 1.0f, 6);
 	offset = offset.rotate(q.getAxis(), q.getAngle());
 
 	// Set init position offset respect the car ---------------------
@@ -249,14 +301,14 @@ Missile::Missile(ModulePlayer* owner)
 	s.SetPos(missileInitPos.x, missileInitPos.y, missileInitPos.z);
 
 	// Use car Z vector as reference --------------------------------
-	float force = 60.0F;
+	float force = 2000.0F;
 	btVector3 Z(0, 0, 1);
 
 	Z = Z.rotate(q.getAxis(), q.getAngle());
 	Z *= force;
 
 	// Create a missile ---------------------------------------------
-	physBody = owner->App->physics->AddBody(s);
+	physBody = owner->App->physics->AddBody(s, 40.0F);
 	physBody->collision_listeners.add(owner);
 	physBody->Push(Z.getX(), Z.getY(), Z.getZ());
 }

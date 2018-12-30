@@ -24,7 +24,8 @@ public:
 	ModulePhysics3D* physics = nullptr;
 	ModuleCamera3D* camera_1 = nullptr;
 	ModuleCamera3D* camera_2 = nullptr;
-	ModulePlayer* player = nullptr;
+	ModulePlayer* player_1 = nullptr;
+	ModulePlayer* player_2 = nullptr;
 
 private:
 
